@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(ls:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout 15 cmd:*)",
+      "Bash(ping:*)",
+      "Bash(curl:*)",
+      "Bash(timeout 20 npm run dev)",
+      "Bash(dir:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

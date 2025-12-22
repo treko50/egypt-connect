@@ -2,16 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
-import { Calendar, Home, User } from "lucide-react"
+import { Calendar, Home, User, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function Header() {
   const pathname = usePathname()
-  const { isSignedIn } = useUser()
   const t = useTranslations('navigation')
   const locale = useLocale()
 
@@ -19,6 +17,7 @@ export function Header() {
     { name: t('home'), href: `/${locale}`, icon: Home },
     { name: t('calendar'), href: `/${locale}/calendar`, icon: Calendar },
     { name: t('profile'), href: `/${locale}/profile`, icon: User },
+    { name: 'Settings', href: `/${locale}/settings`, icon: Settings },
   ]
 
   return (
@@ -56,27 +55,12 @@ export function Header() {
           })}
         </nav>
 
-        {/* Auth & Language */}
+        {/* Language */}
         <div className="flex items-center space-x-3">
           <LanguageSwitcher />
-          {isSignedIn ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "h-9 w-9",
-                },
-              }}
-            />
-          ) : (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <SignInButton />
-              </Button>
-              <Button size="sm" asChild>
-                <SignUpButton />
-              </Button>
-            </>
-          )}
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={`/${locale}/sign-in`}>Sign In</Link>
+          </Button>
         </div>
       </div>
     </header>

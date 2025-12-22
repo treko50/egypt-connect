@@ -8,27 +8,39 @@ import { ShoppingCart, Clock, DollarSign } from "lucide-react"
 interface ShopifyBookingProps {
   date?: Date
   timeSlot?: string
-  consultationType?: 'initial' | 'followUp' | 'extended'
+  consultationType?: 'initial' | 'standard' | 'premium' | 'followUp' | 'documentReview'
 }
 
 const CONSULTATION_TYPES = {
   initial: {
     title: "Initial Consultation",
     duration: "60 minutes",
-    price: "500 EGP",
-    description: "First-time consultation to discuss your legal matter",
+    price: "$299",
+    description: "Comprehensive initial consultation to understand your legal needs",
+  },
+  standard: {
+    title: "Standard Consultation",
+    duration: "90 minutes",
+    price: "$449",
+    description: "Extended session for complex legal matters",
+  },
+  premium: {
+    title: "Premium Consultation",
+    duration: "120 minutes",
+    price: "$649",
+    description: "Comprehensive consultation with extended support",
   },
   followUp: {
-    title: "Follow-up Consultation",
+    title: "Follow-up Session",
     duration: "30 minutes",
-    price: "300 EGP",
-    description: "Continuation of ongoing legal matter",
+    price: "$149",
+    description: "Quick check-in for existing clients",
   },
-  extended: {
-    title: "Extended Consultation",
-    duration: "120 minutes",
-    price: "900 EGP",
-    description: "In-depth consultation for complex legal matters",
+  documentReview: {
+    title: "Document Review",
+    duration: "45 minutes",
+    price: "$199",
+    description: "Focused review of legal documents",
   },
 }
 

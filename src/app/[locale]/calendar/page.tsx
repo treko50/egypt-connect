@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { UserButton } from "@clerk/nextjs"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
@@ -46,13 +45,6 @@ export default function CalendarPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "h-10 w-10",
-                  },
-                }}
-              />
               <Button size="lg" className="gap-2 shadow-lg">
                 <Upload className="h-5 w-5" />
                 Upload Documents
