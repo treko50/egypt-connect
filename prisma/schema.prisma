@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// Enum for days of the week
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model Event {
+  id               String   @id @default(uuid())
+  name             String
+  description      String?
+  durationInMinutes Int
+  clerkUserId      String
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([clerkUserId], name: "clerkUserIdIndex")
+}
+
+model Schedule {
+  id           String   @id @default(uuid())
+  timezone     String
+  clerkUserId  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  availabilities ScheduleAvailability[]
+}
+
+model ScheduleAvailability {
+  id         String   @id @default(uuid())
+  scheduleId String
+  startTime  String
+  endTime    String
+  dayOfWeek  DayOfWeek
+
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId], name: "scheduleIdIndex")
+}

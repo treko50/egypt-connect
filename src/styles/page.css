@@ -1,0 +1,111 @@
+/* General Reset and Styling */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+/* Container and Grid Setup */
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  gap: 20px;
+  padding: 20px;
+  max-width: 800px; /* Keep this for the main container size */
+  margin: 0 auto; /* Center the container */
+}
+
+/* Header Styling */
+header {
+  background-color: #00416a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+/* Main Content */
+main {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 0 auto; /* Center main content */
+  text-align: center; /* Center text and images */
+}
+
+/* Image Styling */
+img {
+  display: block; /* Ensures the image behaves like a block element */
+  margin: 0 auto; /* Centers the image horizontally */
+}
+
+
+
+/* Typography */
+h1 {
+  font-size: 2rem; /* Adjust as needed */
+  margin-bottom: 0.5em;
+  color: #333;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1.5em;
+}
+
+/* Links and Buttons */
+a {
+  color: #00416a;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.button {
+  display: inline-block;
+  background-color: #00416a;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #002c4c;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}

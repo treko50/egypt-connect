@@ -1,0 +1,147 @@
+{
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "navigation": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
+  "home": {
+    "badge": "Modern Scheduling Platform",
+    "title": "Schedule Your Legal Consultation with Judge Hatem Elnahal",
+    "intro": "Expert legal guidance from a seasoned judge with over 25 years of experience in Egyptian law.",
+    "description": "Book your consultation today and get professional legal advice for your commercial, civil, or legal matters.",
+    "scheduleButton": "Schedule Consultation",
+    "learnMore": "Learn More",
+    "features": {
+      "title": "Why Choose Our Platform",
+      "subtitle": "Professional Legal Services",
+      "scheduling": {
+        "title": "Smart Scheduling",
+        "description": "AI-powered calendar management that adapts to your needs and preferences."
+      },
+      "timezone": {
+        "title": "Time Zone Support",
+        "description": "Seamlessly schedule across multiple time zones with automatic conversion."
+      },
+      "team": {
+        "title": "Team Collaboration",
+        "description": "Share calendars and coordinate with your team effortlessly."
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "description": "Enterprise-grade security to keep your data safe and protected."
+      },
+      "fast": {
+        "title": "Lightning Fast",
+        "description": "Optimized performance for quick loading and smooth interactions."
+      },
+      "global": {
+        "title": "Global Accessibility",
+        "description": "Access your calendar from anywhere, on any device."
+      }
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "subtitle": "Book your consultation today and experience professional legal guidance.",
+      "button": "Book Consultation Now"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Manage your schedule and appointments",
+    "newEvent": "New Event",
+    "today": "Today",
+    "timeSlots": "Available Time Slots",
+    "selectDate": "Select a date to view available time slots",
+    "consultationType": "Consultation Type",
+    "consultationSubtitle": "Choose your consultation duration",
+    "initial": "Initial (60 min) - 500 EGP",
+    "followUp": "Follow-up (30 min) - 300 EGP",
+    "extended": "Extended (120 min) - 900 EGP"
+  },
+  "profile": {
+    "title": "Profile",
+    "bookConsultation": "Book Consultation",
+    "about": "About",
+    "legalServices": "Legal Services",
+    "servicesSubtitle": "Comprehensive legal consultation services",
+    "experience": "Experience",
+    "cases": "Successful Cases",
+    "rating": "Client Rating",
+    "commercialLaw": {
+      "title": "Commercial Law",
+      "description": "Expert guidance on business contracts, corporate law, and commercial transactions."
+    },
+    "civilLaw": {
+      "title": "Civil Law",
+      "description": "Assistance with property disputes, family law, and civil litigation matters."
+    },
+    "legalConsulting": {
+      "title": "Legal Consulting",
+      "description": "Strategic legal advice for individuals and businesses navigating complex legal issues."
+    },
+    "contractReview": {
+      "title": "Contract Review",
+      "description": "Thorough analysis and review of contracts to protect your interests."
+    },
+    "ctaTitle": "Ready to schedule a consultation?",
+    "bookNow": "Book Now"
+  },
+  "booking": {
+    "title": "Book & Pay",
+    "subtitle": "Secure payment through Shopify",
+    "duration": "Duration",
+    "selectedAppointment": "Selected Appointment:",
+    "bookAndPay": "Book & Pay with Shopify",
+    "processing": "Processing...",
+    "paymentInfo": "Secure payment powered by Shopify",
+    "paymentMethods": "💳 Credit Card • 📱 Digital Wallets • 🏦 Bank Transfer"
+  },
+  "judge": {
+    "name": "Judge Hatem Elnahal",
+    "title": "Senior Legal Consultant & Judge",
+    "bio": "Judge Hatem Elnahal brings over 25 years of distinguished legal experience to Egypt Connect. Specializing in commercial and civil law, he has successfully handled over 1,000 cases throughout his career. His expertise spans business law, contract negotiation, property disputes, and complex civil litigation. Known for his thorough analysis and practical solutions, Judge Elnahal provides clear, actionable legal guidance to individuals and businesses alike.",
+    "expertise": {
+      "commercial": "Commercial Law",
+      "civil": "Civil Law",
+      "consulting": "Legal Consulting"
+    },
+    "stats": {
+      "experience": "25+ Years",
+      "cases": "1,000+",
+      "rating": "4.9/5.0"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "About Egypt Connect",
+      "description": "Professional legal consultation platform connecting clients with experienced legal experts."
+    },
+    "quickLinks": {
+      "title": "Quick Links",
+      "home": "Home",
+      "calendar": "Calendar",
+      "profile": "Profile",
+      "contact": "Contact"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "disclaimer": "Legal Disclaimer"
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "judge@egyptconnect.com",
+      "phone": "+20 123 456 7890",
+      "location": "Cairo, Egypt"
+    },
+    "copyright": "© 2024 Egypt Connect. All rights reserved."
+  }
+}
