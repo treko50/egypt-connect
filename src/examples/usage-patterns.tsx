@@ -26,9 +26,9 @@ import { useState } from 'react';
 // ✅ CORRECT - Call Your API Route from Client
 // ============================================
 
-'use client'
+// 'use client' - This would be at the top of your actual component file
 
-export default function MyComponent() {
+export function ClientComponent() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +72,7 @@ export default function MyComponent() {
 // ✅ CORRECT - Server Action (Next.js 15)
 // ============================================
 
-'use server'
+// 'use server' - This would be at the top of your server actions file
 
 export async function buildFeatureAction(taskDescription: string, context?: any) {
   // Call YOUR API endpoint from server action

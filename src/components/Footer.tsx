@@ -39,7 +39,7 @@ export function Footer() {
               <a href="mailto:contact@egyptconnect.com" className="text-gray-400 hover:text-primary transition-colors" aria-label="Email us">
                 <Mail className="h-5 w-5" />
               </a>
-              <a href="/calendar" className="text-gray-400 hover:text-primary transition-colors" aria-label="View calendar">
+              <a href="https://egyptconnect.com/calendar" className="text-gray-400 hover:text-primary transition-colors" aria-label="View calendar">
                 <Calendar className="h-5 w-5" />
               </a>
               <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors" aria-label="Find us on map">

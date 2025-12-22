@@ -3,6 +3,8 @@ import { UserButton } from "@clerk/nextjs"
 import { CalendarRange } from "lucide-react"
 import { ReactNode } from "react"
 
+export const dynamic = 'force-dynamic'
+
 export default function PrivateLayout({ children }: { children: ReactNode }) {
   return (
     <>
