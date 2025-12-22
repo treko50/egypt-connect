@@ -3,29 +3,25 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
-import { useTranslations, useLocale } from 'next-intl'
 import { Button } from "@/components/ui/button"
-import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Calendar, Home, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function Header() {
   const pathname = usePathname()
   const { isSignedIn } = useUser()
-  const t = useTranslations('navigation')
-  const locale = useLocale()
 
   const navigation = [
-    { name: t('home'), href: `/${locale}`, icon: Home },
-    { name: t('calendar'), href: `/${locale}/calendar`, icon: Calendar },
-    { name: t('profile'), href: `/${locale}/profile`, icon: User },
+    { name: 'Home', href: `/`, icon: Home },
+    { name: 'Calendar', href: `/calendar`, icon: Calendar },
+    { name: 'Profile', href: `/profile`, icon: User },
   ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 glass-effect">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href={`/${locale}`} className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary">
             <span className="text-xl font-bold text-white">EC</span>
           </div>
@@ -56,9 +52,8 @@ export function Header() {
           })}
         </nav>
 
-        {/* Auth & Language */}
+        {/* Auth */}
         <div className="flex items-center space-x-3">
-          <LanguageSwitcher />
           {isSignedIn ? (
             <UserButton
               appearance={{

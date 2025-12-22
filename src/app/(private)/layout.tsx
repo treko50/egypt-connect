@@ -5,7 +5,7 @@ import { ReactNode } from "react"
 
 export const dynamic = 'force-dynamic'
 
-export default function PrivateLayout({ children }: { children: ReactNode }) {
+export default function PrivateLayout({ children }: { readonly children: ReactNode }) {
   return (
     <>
       <header className="flex py-2 border-b bg-card">
