@@ -1,47 +1,26 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { NextIntlClientProvider } from 'next-intl';
-
-const messages = {
-  common: {
-    loading: 'Loading...',
-    error: 'Error',
-    save: 'Save',
-    cancel: 'Cancel',
-    delete: 'Delete',
-    edit: 'Edit',
-  },
-  navigation: {
-    home: 'Home',
-    calendar: 'Calendar',
-    profile: 'Profile',
-    settings: 'Settings',
-  },
-};
+import { LanguageProvider } from '@/components/LanguageProvider';
 
 interface AllTheProvidersProps {
   children: React.ReactNode;
-  locale?: string;
 }
 
-function AllTheProviders({ children, locale = 'en' }: AllTheProvidersProps) {
+function AllTheProviders({ children }: AllTheProvidersProps) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <LanguageProvider>
       {children}
-    </NextIntlClientProvider>
+    </LanguageProvider>
   );
 }
 
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'> & { locale?: string },
+  options?: Omit<RenderOptions, 'wrapper'>,
 ) => {
-  const { locale, ...renderOptions } = options || {};
   return render(ui, {
-    wrapper: ({ children }) => (
-      <AllTheProviders locale={locale}>{children}</AllTheProviders>
-    ),
-    ...renderOptions,
+    wrapper: AllTheProviders,
+    ...options,
   });
 };
 

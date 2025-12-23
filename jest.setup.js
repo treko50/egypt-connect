@@ -1,9 +1,10 @@
-// @ts-nocheck
-import '@testing-library/jest-dom';
-import { TextEncoder, TextDecoder } from 'util';
+// Jest setup file
+require('@testing-library/jest-dom');
+
+const { TextEncoder, TextDecoder } = require('util');
 
 global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder as any;
+global.TextDecoder = TextDecoder;
 
 // Mock Next.js navigation
 jest.mock('next/navigation', () => ({
@@ -23,17 +24,15 @@ jest.mock('next/navigation', () => ({
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => {
-    return <img {...props} />;
-  },
+  default: (props) => props,
 }));
 
 // Mock Clerk
 jest.mock('@clerk/nextjs', () => ({
   auth: () => ({ userId: 'test-user-id' }),
-  UserButton: () => <div>User Button</div>,
-  SignIn: () => <div>Sign In</div>,
-  SignUp: () => <div>Sign Up</div>,
+  UserButton: () => 'UserButton',
+  SignIn: () => 'SignIn',
+  SignUp: () => 'SignUp',
   useUser: () => ({
     user: {
       id: 'test-user-id',
@@ -59,4 +58,26 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
+});
+
+// Mock localStorage
+const localStorageMock = (() => {
+  let store = {};
+
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    removeItem: (key) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
 });

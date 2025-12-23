@@ -12,7 +12,15 @@
       "Bash(curl:*)",
       "Bash(timeout 20 npm run dev)",
       "Bash(dir:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(git show:*)",
+      "Bash(timeout:*)",
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "Bash(Select-String -Pattern \"settings.*page.tsx\" -Context 0,0)"
     ]
   }
 }

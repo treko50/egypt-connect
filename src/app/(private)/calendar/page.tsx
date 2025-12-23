@@ -1,14 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { UserButton } from "@clerk/nextjs"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShopifyBookingWidget } from "@/components/ShopifyBookingWidget"
 import { EnhancedCalendar } from "@/components/EnhancedCalendar"
-import { Plus, Upload } from "lucide-react"
 
 const DMV_PRICING = {
   initial: { duration: 60, price: 299, name: "Initial Consultation" },
@@ -36,32 +34,13 @@ export default function CalendarPage() {
       <Header />
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
         <div className="container mx-auto px-4">
-          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                Calendar & Scheduling
-              </h1>
-              <p className="text-gray-600 mt-2 text-lg">
-                Book your consultation and manage appointments
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "h-10 w-10",
-                  },
-                }}
-              />
-              <Button size="lg" className="gap-2 shadow-lg">
-                <Upload className="h-5 w-5" />
-                Upload Documents
-              </Button>
-              <Button size="lg" className="gap-2 shadow-lg" variant="outline">
-                <Plus className="h-5 w-5" />
-                New Event
-              </Button>
-            </div>
+          <div className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+              Calendar & Scheduling
+            </h1>
+            <p className="text-gray-600 mt-2 text-lg">
+              Book your consultation and manage appointments
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

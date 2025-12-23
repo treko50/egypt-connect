@@ -1,28 +1,17 @@
 "use client"
 
-import { useLocale } from 'next-intl'
-import { useRouter, usePathname } from 'next/navigation'
+import { useLanguage } from '@/components/LanguageProvider'
 import { Button } from '@/components/ui/button'
 import { Globe } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 
 export function LanguageSwitcher() {
-  const locale = useLocale()
-  const router = useRouter()
-  const pathname = usePathname()
-  const [isPending, startTransition] = useTransition()
+  const { locale, setLocale } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
-  const switchLocale = (newLocale: string) => {
-    startTransition(() => {
-      // Remove current locale from pathname
-      const pathnameWithoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/'
-      // Always include locale in the path
-      const newPath = `/${newLocale}${pathnameWithoutLocale}`
-      
-      router.push(newPath)
-      setIsOpen(false)
-    })
+  const switchLocale = (newLocale: 'en' | 'ar') => {
+    setLocale(newLocale)
+    setIsOpen(false)
   }
 
   return (
@@ -32,7 +21,6 @@ export function LanguageSwitcher() {
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
         className="gap-2"
-        disabled={isPending}
       >
         <Globe className="h-4 w-4" />
         <span className="hidden sm:inline">

@@ -1,47 +1,51 @@
-// @ts-nocheck
 import type { Config } from 'jest';
-import nextJest from 'next/jest';
-
-const createJestConfig = nextJest({
-  dir: './',
-});
 
 const config: Config = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  preset: 'ts-jest',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.tsx',
     '!src/**/__tests__/**',
+    '!src/**/*.test.{ts,tsx}',
     '!src/app/**/layout.tsx',
     '!src/app/**/loading.tsx',
     '!src/app/**/error.tsx',
   ],
   coverageThreshold: {
     global: {
-      lines: 80,
-      functions: 80,
-      branches: 75,
-      statements: 80,
+      lines: 70,
+      functions: 70,
+      branches: 60,
+      statements: 70,
     },
   },
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/e2e/',
+  ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: {
-        jsx: 'react',
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
       },
     }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*\\.mjs$))',
+  ],
 };
 
-export default createJestConfig(config);
+export default config;

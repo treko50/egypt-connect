@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { UserButton } from "@clerk/nextjs"
+import { useState, useEffect } from "react"
+import { useUser, UserButton } from "@clerk/nextjs"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,19 +26,36 @@ import {
 } from "lucide-react"
 
 export default function SettingsPage() {
+  const { user, isLoaded } = useUser()
   const [activeTab, setActiveTab] = useState<'profile' | 'account' | 'notifications' | 'documents' | 'billing'>('profile')
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
-  // Profile state
+  // Profile state - will be loaded from Clerk
   const [profileData, setProfileData] = useState({
-    name: "John Smith",
-    email: "john.smith@example.com",
-    phone: "+1 (202) 555-0123",
-    location: "Washington, DC",
-    timezone: "America/New_York",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    location: "",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     language: "en",
   })
+
+  // Load user data from Clerk when available
+  useEffect(() => {
+    if (isLoaded && user) {
+      setProfileData({
+        firstName: user.firstName || "",
+        lastName: (user.unsafeMetadata?.lastName as string) || user.lastName || "",
+        email: user.emailAddresses[0]?.emailAddress || "",
+        phone: (user.unsafeMetadata?.phone as string) || user.phoneNumbers[0]?.phoneNumber || "",
+        location: (user.unsafeMetadata?.location as string) || "",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: "en",
+      })
+    }
+  }, [isLoaded, user])
 
   // Notification preferences
   const [notifications, setNotifications] = useState({
@@ -50,10 +67,62 @@ export default function SettingsPage() {
   })
 
   const handleSaveProfile = async () => {
+    if (!user) {
+      alert('User not loaded. Please refresh the page.')
+      return
+    }
+
+    // Validate required fields
+    if (!profileData.firstName?.trim()) {
+      alert('First name is required.')
+      return
+    }
+
     setIsSaving(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsSaving(false)
-    setIsEditing(false)
+    try {
+      console.log('Updating user with data:', {
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        location: profileData.location,
+        phone: profileData.phone,
+      })
+
+      // Only update firstName and metadata
+      // Clerk doesn't allow lastName updates via user.update()
+      const updateData: any = {
+        firstName: profileData.firstName.trim(),
+      }
+
+      // Add unsafeMetadata
+      updateData.unsafeMetadata = {
+        ...user.unsafeMetadata,
+        lastName: profileData.lastName?.trim() || '',
+        location: profileData.location || '',
+        phone: profileData.phone || '',
+      }
+
+      await user.update(updateData)
+
+      setIsEditing(false)
+
+      // Show success message
+      alert('Profile updated successfully!')
+    } catch (error: any) {
+      console.error('Failed to update profile:', error)
+      console.error('Error details:', error.message, error.errors)
+
+      // More detailed error message
+      let errorMsg = 'Failed to update profile. '
+      if (error.errors && Array.isArray(error.errors)) {
+        errorMsg += error.errors.map((e: any) => e.message).join(', ')
+      } else if (error.message) {
+        errorMsg += error.message
+      }
+
+      alert(errorMsg)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleFileUpload = async (files: File[]) => {
@@ -76,6 +145,25 @@ export default function SettingsPage() {
     { id: 'documents' as const, label: 'Documents', icon: FileText },
     { id: 'billing' as const, label: 'Billing', icon: CreditCard },
   ]
+
+  if (!isLoaded) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-center h-96">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading your settings...</p>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   return (
     <>
@@ -162,28 +250,49 @@ export default function SettingsPage() {
                   <CardContent className="space-y-6">
                     {/* Profile Picture */}
                     <div className="flex items-center gap-6">
-                      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-3xl font-bold">
-                        {profileData.name.split(' ').map(n => n[0]).join('')}
-                      </div>
+                      {user?.imageUrl ? (
+                        <img
+                          src={user.imageUrl}
+                          alt={`${profileData.firstName} ${profileData.lastName}`}
+                          className="w-24 h-24 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-3xl font-bold">
+                          {profileData.firstName[0]}{profileData.lastName[0]}
+                        </div>
+                      )}
                       {isEditing && (
-                        <Button variant="outline" className="gap-2">
-                          <UploadIcon className="h-4 w-4" />
-                          Change Photo
-                        </Button>
+                        <div className="text-sm text-gray-600">
+                          <p>To change your photo, use the profile button</p>
+                          <p>in the top right corner</p>
+                        </div>
                       )}
                     </div>
 
                     {/* Profile Fields */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="name" className="flex items-center gap-2">
+                        <Label htmlFor="firstName" className="flex items-center gap-2">
                           <User className="h-4 w-4" />
-                          Full Name
+                          First Name
                         </Label>
                         <Input
-                          id="name"
-                          value={profileData.name}
-                          onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                          id="firstName"
+                          value={profileData.firstName}
+                          onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
+                          disabled={!isEditing}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName" className="flex items-center gap-2">
+                          <User className="h-4 w-4" />
+                          Last Name
+                        </Label>
+                        <Input
+                          id="lastName"
+                          value={profileData.lastName}
+                          onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
                           disabled={!isEditing}
                         />
                       </div>
@@ -197,9 +306,10 @@ export default function SettingsPage() {
                           id="email"
                           type="email"
                           value={profileData.email}
-                          onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                          disabled={!isEditing}
+                          disabled
+                          className="bg-gray-50"
                         />
+                        <p className="text-xs text-gray-500">Email changes must be done through your account settings</p>
                       </div>
 
                       <div className="space-y-2">
@@ -287,10 +397,12 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                         <div>
                           <p className="font-medium text-green-900">Account Active</p>
-                          <p className="text-sm text-green-700">Member since December 2024</p>
+                          <p className="text-sm text-green-700">
+                            Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}
+                          </p>
                         </div>
                         <Badge variant="secondary" className="bg-green-100 text-green-800">
-                          Verified
+                          {user?.emailAddresses[0]?.verification?.status === 'verified' ? 'Verified' : 'Unverified'}
                         </Badge>
                       </div>
                     </div>

@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useTranslations, useLocale } from 'next-intl'
+import { useUser, UserButton } from "@clerk/nextjs"
+import { useTranslations } from '@/components/LanguageProvider'
 import { Button } from "@/components/ui/button"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Calendar, Home, User, Settings } from "lucide-react"
@@ -10,21 +11,21 @@ import { cn } from "@/lib/utils"
 
 export function Header() {
   const pathname = usePathname()
-  const t = useTranslations('navigation')
-  const locale = useLocale()
+  const { t } = useTranslations('navigation')
+  const { isSignedIn } = useUser()
 
   const navigation = [
-    { name: t('home'), href: `/${locale}`, icon: Home },
-    { name: t('calendar'), href: `/${locale}/calendar`, icon: Calendar },
-    { name: t('profile'), href: `/${locale}/profile`, icon: User },
-    { name: 'Settings', href: `/${locale}/settings`, icon: Settings },
+    { name: t('home'), href: `/`, icon: Home },
+    { name: t('calendar'), href: `/calendar`, icon: Calendar },
+    { name: t('profile'), href: `/profile`, icon: User },
+    { name: 'Settings', href: `/settings`, icon: Settings },
   ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 glass-effect">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href={`/${locale}`} className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary">
             <span className="text-xl font-bold text-white">EC</span>
           </div>
@@ -55,12 +56,22 @@ export function Header() {
           })}
         </nav>
 
-        {/* Language */}
+        {/* Language & Auth */}
         <div className="flex items-center space-x-3">
           <LanguageSwitcher />
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={`/${locale}/sign-in`}>Sign In</Link>
-          </Button>
+          {isSignedIn ? (
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-10 w-10",
+                },
+              }}
+            />
+          ) : (
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

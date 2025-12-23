@@ -1,5 +1,7 @@
+'use client'
+
 import Link from "next/link"
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from '@/components/LanguageProvider'
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Header } from "@/components/Header"
@@ -15,14 +17,9 @@ const features = [
   { icon: Globe, key: 'global' },
 ]
 
-export default async function Home({
-  params
-}: {
-  params: Promise<{ locale: string }>
-}) {
-  const { locale } = await params
-  const t = await getTranslations('home')
-  const tFeatures = await getTranslations('home.features')
+export default function Home() {
+  const { t: tHome } = useTranslations('home')
+  const { t: tFeatures } = useTranslations('home.features')
 
   return (
     <>
@@ -35,27 +32,27 @@ export default async function Home({
             <div className="mx-auto max-w-4xl text-center">
               <div className="mb-6 inline-flex items-center rounded-full bg-primary-100 px-4 py-2 text-sm font-medium text-primary-700">
                 <Zap className="mr-2 h-4 w-4" />
-                {t('badge')}
+                {tHome('badge')}
               </div>
-              
+
               <h1 className="mb-6 text-5xl md:text-7xl font-bold tracking-tight text-gray-900 animate-fade-in">
-                {t('title')}
+                {tHome('title')}
               </h1>
-              
+
               <p className="mb-8 text-xl text-gray-600 max-w-2xl mx-auto animate-slide-up">
-                {t('intro')}
+                {tHome('intro')}
               </p>
-              
+
               <p className="mb-10 text-lg text-gray-500 max-w-xl mx-auto animate-slide-up">
-                {t('description')}
+                {tHome('description')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
                 <Button asChild size="lg" className="text-lg px-8 py-6 rounded-xl">
-                  <Link href={`/${locale}/calendar`}>{t('scheduleButton')}</Link>
+                  <Link href="/calendar">{tHome('scheduleButton')}</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 rounded-xl">
-                  <Link href="#features">{t('learnMore')}</Link>
+                  <Link href="#features">{tHome('learnMore')}</Link>
                 </Button>
               </div>
             </div>
@@ -83,7 +80,7 @@ export default async function Home({
               {features.map((feature) => {
                 const Icon = feature.icon
                 return (
-                  <Card 
+                  <Card
                     key={feature.key}
                     className="hover:shadow-xl transition-shadow duration-300 border-gray-100"
                   >
@@ -109,13 +106,13 @@ export default async function Home({
         <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-800 text-white">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              {t('cta.title')}
+              {tHome('cta.title')}
             </h2>
             <p className="text-xl mb-10 text-primary-100 max-w-2xl mx-auto">
-              {t('cta.subtitle')}
+              {tHome('cta.subtitle')}
             </p>
             <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6 rounded-xl">
-              <Link href={`/${locale}/calendar`}>{t('cta.button')}</Link>
+              <Link href="/calendar">{tHome('cta.button')}</Link>
             </Button>
           </div>
         </section>
