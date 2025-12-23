@@ -31,7 +31,7 @@ export default function SettingsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
-  // Profile state - will be loaded from Clerk
+  // Profile state - will be loaded from Supabase
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -41,20 +41,47 @@ export default function SettingsPage() {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     language: "en",
   })
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true)
 
-  // Load user data from Clerk when available
+  // Load user data from Supabase when available
   useEffect(() => {
-    if (isLoaded && user) {
-      setProfileData({
-        firstName: user.firstName || "",
-        lastName: (user.unsafeMetadata?.lastName as string) || user.lastName || "",
-        email: user.emailAddresses[0]?.emailAddress || "",
-        phone: (user.unsafeMetadata?.phone as string) || user.phoneNumbers[0]?.phoneNumber || "",
-        location: (user.unsafeMetadata?.location as string) || "",
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        language: "en",
-      })
+    async function loadProfile() {
+      if (!isLoaded || !user) return
+
+      setIsLoadingProfile(true)
+      try {
+        const response = await fetch('/api/user/profile')
+        if (response.ok) {
+          const data = await response.json()
+          setProfileData({
+            firstName: data.first_name || "",
+            lastName: data.last_name || "",
+            email: data.email || user.emailAddresses[0]?.emailAddress || "",
+            phone: data.phone || "",
+            location: data.location || "",
+            timezone: data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: data.language || "en",
+          })
+        } else {
+          // Fallback to Clerk data if Supabase fails
+          setProfileData({
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            email: user.emailAddresses[0]?.emailAddress || "",
+            phone: user.phoneNumbers[0]?.phoneNumber || "",
+            location: "",
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            language: "en",
+          })
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error)
+      } finally {
+        setIsLoadingProfile(false)
+      }
     }
+
+    loadProfile()
   }, [isLoaded, user])
 
   // Notification preferences
@@ -80,28 +107,25 @@ export default function SettingsPage() {
 
     setIsSaving(true)
     try {
-      console.log('Updating user with data:', {
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        location: profileData.location,
-        phone: profileData.phone,
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: profileData.firstName.trim(),
+          lastName: profileData.lastName?.trim() || '',
+          phone: profileData.phone || '',
+          location: profileData.location || '',
+          timezone: profileData.timezone,
+          language: profileData.language,
+        }),
       })
 
-      // Only update firstName and metadata
-      // Clerk doesn't allow lastName updates via user.update()
-      const updateData: any = {
-        firstName: profileData.firstName.trim(),
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to update profile')
       }
-
-      // Add unsafeMetadata
-      updateData.unsafeMetadata = {
-        ...user.unsafeMetadata,
-        lastName: profileData.lastName?.trim() || '',
-        location: profileData.location || '',
-        phone: profileData.phone || '',
-      }
-
-      await user.update(updateData)
 
       setIsEditing(false)
 
@@ -146,7 +170,7 @@ export default function SettingsPage() {
     { id: 'billing' as const, label: 'Billing', icon: CreditCard },
   ]
 
-  if (!isLoaded) {
+  if (!isLoaded || isLoadingProfile) {
     return (
       <>
         <Header />
