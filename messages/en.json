@@ -2,7 +2,31 @@
   "common": {
     "language": "Language",
     "english": "English",
-    "arabic": "العربية"
+    "arabic": "العربية",
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "minutes": "minutes"
   },
   "navigation": {
     "home": "Home",
@@ -53,17 +77,72 @@
     }
   },
   "calendar": {
-    "title": "Calendar",
-    "subtitle": "Manage your schedule and appointments",
+    "title": "Calendar & Scheduling",
+    "subtitle": "Book your consultation and manage appointments",
     "newEvent": "New Event",
     "today": "Today",
     "timeSlots": "Available Time Slots",
     "selectDate": "Select a date to view available time slots",
-    "consultationType": "Consultation Type",
-    "consultationSubtitle": "Choose your consultation duration",
-    "initial": "Initial (60 min) - 500 EGP",
-    "followUp": "Follow-up (30 min) - 300 EGP",
-    "extended": "Extended (120 min) - 900 EGP"
+    "viewMode": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    },
+    "legend": {
+      "today": "Today",
+      "selected": "Selected",
+      "hasEvents": "Has Events",
+      "past": "Past"
+    },
+    "timeSlot": {
+      "booked": "Booked",
+      "noAvailable": "No available time slots",
+      "selectDifferent": "Please select a different date"
+    },
+    "booking": {
+      "summary": "Booking Summary",
+      "date": "Date",
+      "selectService": "Select Service",
+      "chooseType": "Choose your consultation type"
+    },
+    "consultationTypes": {
+      "initial": {
+        "name": "Initial Consultation",
+        "duration": "60 minutes",
+        "price": "$299",
+        "description": "Comprehensive initial consultation to understand your legal needs"
+      },
+      "standard": {
+        "name": "Standard Consultation",
+        "duration": "90 minutes",
+        "price": "$449",
+        "description": "Extended session for complex legal matters"
+      },
+      "premium": {
+        "name": "Premium Consultation",
+        "duration": "120 minutes",
+        "price": "$649",
+        "description": "Comprehensive consultation with extended support"
+      },
+      "followUp": {
+        "name": "Follow-up Session",
+        "duration": "30 minutes",
+        "price": "$149",
+        "description": "Quick check-in for existing clients"
+      },
+      "documentReview": {
+        "name": "Document Review",
+        "duration": "45 minutes",
+        "price": "$199",
+        "description": "Focused review of legal documents"
+      }
+    },
+    "help": {
+      "title": "Need Help?",
+      "description": "All times are shown in your local timezone. You can upload relevant documents before or after booking.",
+      "faq": "View FAQ"
+    },
+    "moreEvents": "more"
   },
   "profile": {
     "title": "Profile",
@@ -96,7 +175,7 @@
   "booking": {
     "title": "Book & Pay",
     "subtitle": "Secure payment through Shopify",
-    "duration": "Duration",
+    "duration": "Duration:",
     "selectedAppointment": "Selected Appointment:",
     "bookAndPay": "Book & Pay with Shopify",
     "processing": "Processing...",
@@ -143,5 +222,72 @@
       "location": "Cairo, Egypt"
     },
     "copyright": "© 2024 Egypt Connect. All rights reserved."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "tabs": {
+      "profile": "Profile",
+      "account": "Account",
+      "notifications": "Notifications",
+      "documents": "Documents",
+      "billing": "Billing"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "subtitle": "Update your personal details",
+      "editProfile": "Edit Profile",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "photoInstruction": "Click on your photo to change it",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "emailHelper": "Email cannot be changed here",
+      "phone": "Phone Number",
+      "location": "Location",
+      "timezone": "Timezone",
+      "language": "Language"
+    },
+    "account": {
+      "title": "Account Settings",
+      "subtitle": "Manage your account security and preferences",
+      "security": "Security",
+      "twoFactor": "Two-Factor Authentication",
+      "twoFactorDesc": "Add an extra layer of security",
+      "changePassword": "Change Password",
+      "changePasswordDesc": "Update your password regularly",
+      "accountInfo": "Account Information",
+      "memberSince": "Member since",
+      "accountStatus": "Account Status",
+      "verified": "Verified",
+      "unverified": "Unverified"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "subtitle": "Manage how you receive notifications",
+      "email": "Email Notifications",
+      "bookingConfirmation": "Booking Confirmations",
+      "reminders": "Appointment Reminders",
+      "updates": "News & Updates",
+      "sms": "SMS Notifications",
+      "smsReminders": "SMS Reminders",
+      "smsConfirmation": "SMS Confirmations",
+      "savePreferences": "Save Preferences"
+    },
+    "documents": {
+      "title": "Documents",
+      "subtitle": "Manage your uploaded documents"
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "subtitle": "Manage your payment methods and billing history",
+      "paymentMethods": "Payment Methods",
+      "noPaymentMethods": "No payment methods added",
+      "addPaymentMethod": "Add Payment Method",
+      "billingHistory": "Billing History",
+      "noBillingHistory": "No billing history available"
+    }
   }
 }

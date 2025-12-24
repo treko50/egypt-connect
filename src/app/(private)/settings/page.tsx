@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useUser, UserButton } from "@clerk/nextjs"
+import { useTranslations } from "@/components/LanguageProvider"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { DocumentUpload } from "@/components/DocumentUpload"
 import { Badge } from "@/components/ui/badge"
 import {
   User,
@@ -20,14 +20,13 @@ import {
   CreditCard,
   Globe,
   Save,
-  Upload as UploadIcon,
   Settings as SettingsIcon,
-  FileText
 } from "lucide-react"
 
 export default function SettingsPage() {
   const { user, isLoaded } = useUser()
-  const [activeTab, setActiveTab] = useState<'profile' | 'account' | 'notifications' | 'documents' | 'billing'>('profile')
+  const { t } = useTranslations('settings')
+  const [activeTab, setActiveTab] = useState<'profile' | 'account' | 'notifications' | 'billing'>('profile')
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -149,25 +148,11 @@ export default function SettingsPage() {
     }
   }
 
-  const handleFileUpload = async (files: File[]) => {
-    console.log('Uploading files:', files)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-  }
-
-  const handleFileDelete = async (fileId: string) => {
-    console.log('Deleting file:', fileId)
-  }
-
-  const handleFileDownload = async (fileId: string) => {
-    console.log('Downloading file:', fileId)
-  }
-
   const tabs = [
-    { id: 'profile' as const, label: 'Profile', icon: User },
-    { id: 'account' as const, label: 'Account', icon: SettingsIcon },
-    { id: 'notifications' as const, label: 'Notifications', icon: Bell },
-    { id: 'documents' as const, label: 'Documents', icon: FileText },
-    { id: 'billing' as const, label: 'Billing', icon: CreditCard },
+    { id: 'profile' as const, label: t('tabs.profile'), icon: User },
+    { id: 'account' as const, label: t('tabs.account'), icon: SettingsIcon },
+    { id: 'notifications' as const, label: t('tabs.notifications'), icon: Bell },
+    { id: 'billing' as const, label: t('tabs.billing'), icon: CreditCard },
   ]
 
   if (!isLoaded || isLoadingProfile) {
@@ -198,10 +183,10 @@ export default function SettingsPage() {
           <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                Settings
+                {t('title')}
               </h1>
               <p className="text-gray-600 mt-2 text-lg">
-                Manage your account and preferences
+                {t('subtitle')}
               </p>
             </div>
             <UserButton
@@ -247,23 +232,23 @@ export default function SettingsPage() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-2xl">Profile Information</CardTitle>
-                        <CardDescription>Update your personal details</CardDescription>
+                        <CardTitle className="text-2xl">{t('profile.title')}</CardTitle>
+                        <CardDescription>{t('profile.subtitle')}</CardDescription>
                       </div>
                       {!isEditing ? (
-                        <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
+                        <Button onClick={() => setIsEditing(true)}>{t('profile.editProfile')}</Button>
                       ) : (
                         <div className="flex gap-2">
                           <Button variant="outline" onClick={() => setIsEditing(false)}>
-                            Cancel
+                            {t('profile.cancel')}
                           </Button>
                           <Button onClick={handleSaveProfile} disabled={isSaving}>
                             {isSaving ? (
-                              <>Saving...</>
+                              <>{t('profile.saving')}</>
                             ) : (
                               <>
                                 <Save className="h-4 w-4 mr-2" />
-                                Save Changes
+                                {t('profile.save')}
                               </>
                             )}
                           </Button>
@@ -287,8 +272,7 @@ export default function SettingsPage() {
                       )}
                       {isEditing && (
                         <div className="text-sm text-gray-600">
-                          <p>To change your photo, use the profile button</p>
-                          <p>in the top right corner</p>
+                          <p>{t('profile.photoInstruction')}</p>
                         </div>
                       )}
                     </div>
@@ -298,7 +282,7 @@ export default function SettingsPage() {
                       <div className="space-y-2">
                         <Label htmlFor="firstName" className="flex items-center gap-2">
                           <User className="h-4 w-4" />
-                          First Name
+                          {t('profile.firstName')}
                         </Label>
                         <Input
                           id="firstName"
@@ -311,7 +295,7 @@ export default function SettingsPage() {
                       <div className="space-y-2">
                         <Label htmlFor="lastName" className="flex items-center gap-2">
                           <User className="h-4 w-4" />
-                          Last Name
+                          {t('profile.lastName')}
                         </Label>
                         <Input
                           id="lastName"
@@ -324,7 +308,7 @@ export default function SettingsPage() {
                       <div className="space-y-2">
                         <Label htmlFor="email" className="flex items-center gap-2">
                           <Mail className="h-4 w-4" />
-                          Email Address
+                          {t('profile.email')}
                         </Label>
                         <Input
                           id="email"
@@ -333,13 +317,13 @@ export default function SettingsPage() {
                           disabled
                           className="bg-gray-50"
                         />
-                        <p className="text-xs text-gray-500">Email changes must be done through your account settings</p>
+                        <p className="text-xs text-gray-500">{t('profile.emailHelper')}</p>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="phone" className="flex items-center gap-2">
                           <Phone className="h-4 w-4" />
-                          Phone Number
+                          {t('profile.phone')}
                         </Label>
                         <Input
                           id="phone"
@@ -353,7 +337,7 @@ export default function SettingsPage() {
                       <div className="space-y-2">
                         <Label htmlFor="location" className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          Location
+                          {t('profile.location')}
                         </Label>
                         <Input
                           id="location"
@@ -366,7 +350,7 @@ export default function SettingsPage() {
                       <div className="space-y-2">
                         <Label htmlFor="timezone" className="flex items-center gap-2">
                           <Globe className="h-4 w-4" />
-                          Timezone
+                          {t('profile.timezone')}
                         </Label>
                         <Input
                           id="timezone"
@@ -377,7 +361,7 @@ export default function SettingsPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="language">Language</Label>
+                        <Label htmlFor="language">{t('profile.language')}</Label>
                         <Input
                           id="language"
                           value={profileData.language === 'en' ? 'English' : 'Arabic'}
@@ -396,37 +380,34 @@ export default function SettingsPage() {
                   <CardHeader>
                     <CardTitle className="text-2xl flex items-center gap-2">
                       <Shield className="h-6 w-6" />
-                      Account Settings
+                      {t('account.title')}
                     </CardTitle>
-                    <CardDescription>Manage your account security and preferences</CardDescription>
+                    <CardDescription>{t('account.subtitle')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <h3 className="font-semibold text-lg mb-4">Security</h3>
+                      <h3 className="font-semibold text-lg mb-4">{t('account.security')}</h3>
                       <div className="space-y-3">
                         <Button variant="outline" className="w-full justify-start">
-                          Change Password
+                          {t('account.changePassword')}
                         </Button>
                         <Button variant="outline" className="w-full justify-start">
-                          Enable Two-Factor Authentication
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50">
-                          Delete Account
+                          {t('account.twoFactor')}
                         </Button>
                       </div>
                     </div>
 
                     <div className="pt-6 border-t border-gray-200">
-                      <h3 className="font-semibold text-lg mb-4">Account Status</h3>
+                      <h3 className="font-semibold text-lg mb-4">{t('account.accountInfo')}</h3>
                       <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                         <div>
-                          <p className="font-medium text-green-900">Account Active</p>
+                          <p className="font-medium text-green-900">{t('account.accountStatus')}</p>
                           <p className="text-sm text-green-700">
-                            Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}
+                            {t('account.memberSince')} {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}
                           </p>
                         </div>
                         <Badge variant="secondary" className="bg-green-100 text-green-800">
-                          {user?.emailAddresses[0]?.verification?.status === 'verified' ? 'Verified' : 'Unverified'}
+                          {user?.emailAddresses[0]?.verification?.status === 'verified' ? t('account.verified') : t('account.unverified')}
                         </Badge>
                       </div>
                     </div>
@@ -440,13 +421,13 @@ export default function SettingsPage() {
                   <CardHeader>
                     <CardTitle className="text-2xl flex items-center gap-2">
                       <Bell className="h-6 w-6" />
-                      Notification Preferences
+                      {t('notifications.title')}
                     </CardTitle>
-                    <CardDescription>Choose how you want to be notified</CardDescription>
+                    <CardDescription>{t('notifications.subtitle')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <h3 className="font-semibold text-lg mb-4">Email Notifications</h3>
+                      <h3 className="font-semibold text-lg mb-4">{t('notifications.email')}</h3>
                       <div className="space-y-4">
                         {Object.entries(notifications)
                           .filter(([key]) => key.startsWith('email'))
@@ -467,7 +448,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="pt-6 border-t border-gray-200">
-                      <h3 className="font-semibold text-lg mb-4">SMS Notifications</h3>
+                      <h3 className="font-semibold text-lg mb-4">{t('notifications.sms')}</h3>
                       <div className="space-y-4">
                         {Object.entries(notifications)
                           .filter(([key]) => key.startsWith('sms'))
@@ -489,20 +470,10 @@ export default function SettingsPage() {
 
                     <Button className="w-full">
                       <Save className="h-4 w-4 mr-2" />
-                      Save Preferences
+                      {t('notifications.savePreferences')}
                     </Button>
                   </CardContent>
                 </Card>
-              )}
-
-              {/* Documents Tab */}
-              {activeTab === 'documents' && (
-                <DocumentUpload
-                  userRole="client"
-                  onUpload={handleFileUpload}
-                  onDelete={handleFileDelete}
-                  onDownload={handleFileDownload}
-                />
               )}
 
               {/* Billing Tab */}
@@ -511,22 +482,22 @@ export default function SettingsPage() {
                   <CardHeader>
                     <CardTitle className="text-2xl flex items-center gap-2">
                       <CreditCard className="h-6 w-6" />
-                      Billing & Payments
+                      {t('billing.title')}
                     </CardTitle>
-                    <CardDescription>Manage payment methods and view invoices</CardDescription>
+                    <CardDescription>{t('billing.subtitle')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <h3 className="font-semibold text-lg mb-4">Payment Methods</h3>
+                      <h3 className="font-semibold text-lg mb-4">{t('billing.paymentMethods')}</h3>
                       <Button variant="outline" className="w-full justify-start gap-2">
                         <CreditCard className="h-4 w-4" />
-                        Add Payment Method
+                        {t('billing.addPaymentMethod')}
                       </Button>
                     </div>
 
                     <div className="pt-6 border-t border-gray-200">
-                      <h3 className="font-semibold text-lg mb-4">Billing History</h3>
-                      <p className="text-gray-500 text-center py-8">No billing history yet</p>
+                      <h3 className="font-semibold text-lg mb-4">{t('billing.billingHistory')}</h3>
+                      <p className="text-gray-500 text-center py-8">{t('billing.noBillingHistory')}</p>
                     </div>
                   </CardContent>
                 </Card>

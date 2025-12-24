@@ -20,7 +20,11 @@
       "Bash(timeout:*)",
       "Bash(git checkout:*)",
       "Bash(wc:*)",
-      "Bash(Select-String -Pattern \"settings.*page.tsx\" -Context 0,0)"
+      "Bash(Select-String -Pattern \"settings.*page.tsx\" -Context 0,0)",
+      "Bash(node -e:*)",
+      "Bash(exit 0)",
+      "Bash(if exist \".next\" rmdir /s /q \".next\")",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

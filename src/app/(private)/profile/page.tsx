@@ -6,12 +6,14 @@ import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { STRINGS } from "@/hardcoded-strings"
+import { useTranslations } from "@/components/LanguageProvider"
 import { Mail, Phone, MapPin, Award, Briefcase, Star, Calendar } from "lucide-react"
 import Link from "next/link"
 
 export default function ProfilePage() {
-  const { profile } = STRINGS
+  const { t } = useTranslations('profile')
+  const { t: tJudge } = useTranslations('judge')
+  const { t: tFooter } = useTranslations('footer')
 
   return (
     <>
@@ -26,7 +28,7 @@ export default function ProfilePage() {
                 <div className="relative w-48 h-48 rounded-2xl overflow-hidden bg-gradient-to-br from-primary-500 to-primary-700 flex-shrink-0">
                   <Image
                     src="/main_pic.jpg"
-                    alt={profile.name}
+                    alt={tJudge('name')}
                     fill
                     className="object-cover"
                     priority
@@ -36,42 +38,42 @@ export default function ProfilePage() {
                 {/* Profile Info */}
                 <div className="flex-1 text-center md:text-left">
                   <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                    {profile.name}
+                    {tJudge('name')}
                   </h1>
-                  <p className="text-xl text-primary-600 mb-4">{profile.title}</p>
-                  
+                  <p className="text-xl text-primary-600 mb-4">{tJudge('title')}</p>
+
                   {/* Expertise Tags */}
                   <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-6">
-                    {profile.expertise.map((skill) => (
-                      <Badge
-                        key={skill}
-                        variant="secondary"
-                        className="text-sm px-3 py-1"
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {tJudge('expertise.commercial')}
+                    </Badge>
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {tJudge('expertise.civil')}
+                    </Badge>
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {tJudge('expertise.consulting')}
+                    </Badge>
                   </div>
 
                   {/* Contact Info */}
                   <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center md:justify-start">
                     <a
-                      href="mailto:judge@egyptconnect.com"
+                      href={`mailto:${tFooter('contact.email')}`}
                       className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors"
                     >
                       <Mail className="h-5 w-5" />
-                      <span className="text-sm">judge@egyptconnect.com</span>
+                      <span className="text-sm">{tFooter('contact.email')}</span>
                     </a>
                     <a
-                      href="tel:+201234567890"
+                      href={`tel:${tFooter('contact.phone').replace(/\s/g, '')}`}
                       className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors"
                     >
                       <Phone className="h-5 w-5" />
-                      <span className="text-sm">+20 123 456 7890</span>
+                      <span className="text-sm">{tFooter('contact.phone')}</span>
                     </a>
                     <div className="flex items-center gap-2 text-gray-600">
                       <MapPin className="h-5 w-5" />
-                      <span className="text-sm">Cairo, Egypt</span>
+                      <span className="text-sm">{tFooter('contact.location')}</span>
                     </div>
                   </div>
 
@@ -79,7 +81,7 @@ export default function ProfilePage() {
                   <Button asChild size="lg" className="gap-2">
                     <Link href="/calendar">
                       <Calendar className="h-5 w-5" />
-                      Book Consultation
+                      {t('bookConsultation')}
                     </Link>
                   </Button>
                 </div>
@@ -93,9 +95,9 @@ export default function ProfilePage() {
               <CardContent className="pt-6">
                 <Award className="h-12 w-12 mx-auto mb-4 text-primary-600" />
                 <div className="text-3xl font-bold text-gray-900 mb-2">
-                  {profile.experience}
+                  {tJudge('stats.experience')}
                 </div>
-                <p className="text-gray-600">Experience</p>
+                <p className="text-gray-600">{t('experience')}</p>
               </CardContent>
             </Card>
 
@@ -103,9 +105,9 @@ export default function ProfilePage() {
               <CardContent className="pt-6">
                 <Briefcase className="h-12 w-12 mx-auto mb-4 text-primary-600" />
                 <div className="text-3xl font-bold text-gray-900 mb-2">
-                  {profile.cases}
+                  {tJudge('stats.cases')}
                 </div>
-                <p className="text-gray-600">Successful Cases</p>
+                <p className="text-gray-600">{t('cases')}</p>
               </CardContent>
             </Card>
 
@@ -113,9 +115,9 @@ export default function ProfilePage() {
               <CardContent className="pt-6">
                 <Star className="h-12 w-12 mx-auto mb-4 text-secondary-500" />
                 <div className="text-3xl font-bold text-gray-900 mb-2">
-                  {profile.rating}
+                  {tJudge('stats.rating')}
                 </div>
-                <p className="text-gray-600">Client Rating</p>
+                <p className="text-gray-600">{t('rating')}</p>
               </CardContent>
             </Card>
           </div>
@@ -123,11 +125,11 @@ export default function ProfilePage() {
           {/* Bio Section */}
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle className="text-2xl">About</CardTitle>
+              <CardTitle className="text-2xl">{t('about')}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 leading-relaxed text-lg">
-                {profile.bio}
+                {tJudge('bio')}
               </p>
             </CardContent>
           </Card>
@@ -135,48 +137,48 @@ export default function ProfilePage() {
           {/* Services Section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">Legal Services</CardTitle>
+              <CardTitle className="text-2xl">{t('legalServices')}</CardTitle>
               <CardDescription>
-                Comprehensive legal consultation services
+                {t('servicesSubtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border-l-4 border-primary-500 pl-4">
-                  <h3 className="font-semibold text-lg mb-2">Commercial Law</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('commercialLaw.title')}</h3>
                   <p className="text-gray-600">
-                    Expert guidance on business contracts, corporate law, and commercial transactions.
+                    {t('commercialLaw.description')}
                   </p>
                 </div>
                 <div className="border-l-4 border-primary-500 pl-4">
-                  <h3 className="font-semibold text-lg mb-2">Civil Law</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('civilLaw.title')}</h3>
                   <p className="text-gray-600">
-                    Assistance with property disputes, family law, and civil litigation matters.
+                    {t('civilLaw.description')}
                   </p>
                 </div>
                 <div className="border-l-4 border-primary-500 pl-4">
-                  <h3 className="font-semibold text-lg mb-2">Legal Consulting</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('legalConsulting.title')}</h3>
                   <p className="text-gray-600">
-                    Strategic legal advice for individuals and businesses navigating complex legal issues.
+                    {t('legalConsulting.description')}
                   </p>
                 </div>
                 <div className="border-l-4 border-primary-500 pl-4">
-                  <h3 className="font-semibold text-lg mb-2">Contract Review</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('contractReview.title')}</h3>
                   <p className="text-gray-600">
-                    Thorough analysis and review of contracts to protect your interests.
+                    {t('contractReview.description')}
                   </p>
                 </div>
               </div>
 
               <div className="mt-8 p-6 bg-primary-50 rounded-xl">
                 <h3 className="font-semibold text-lg mb-4 text-center">
-                  Ready to schedule a consultation?
+                  {t('ctaTitle')}
                 </h3>
                 <div className="flex justify-center">
                   <Button asChild size="lg" className="gap-2">
                     <Link href="/calendar">
                       <Calendar className="h-5 w-5" />
-                      Book Now
+                      {t('bookNow')}
                     </Link>
                   </Button>
                 </div>

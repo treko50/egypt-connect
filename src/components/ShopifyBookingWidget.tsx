@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShoppingCart, Clock, DollarSign } from "lucide-react"
+import { useTranslations } from "@/components/LanguageProvider"
 
 interface ShopifyBookingProps {
   date?: Date
@@ -11,42 +12,10 @@ interface ShopifyBookingProps {
   consultationType?: 'initial' | 'standard' | 'premium' | 'followUp' | 'documentReview'
 }
 
-const CONSULTATION_TYPES = {
-  initial: {
-    title: "Initial Consultation",
-    duration: "60 minutes",
-    price: "$299",
-    description: "Comprehensive initial consultation to understand your legal needs",
-  },
-  standard: {
-    title: "Standard Consultation",
-    duration: "90 minutes",
-    price: "$449",
-    description: "Extended session for complex legal matters",
-  },
-  premium: {
-    title: "Premium Consultation",
-    duration: "120 minutes",
-    price: "$649",
-    description: "Comprehensive consultation with extended support",
-  },
-  followUp: {
-    title: "Follow-up Session",
-    duration: "30 minutes",
-    price: "$149",
-    description: "Quick check-in for existing clients",
-  },
-  documentReview: {
-    title: "Document Review",
-    duration: "45 minutes",
-    price: "$199",
-    description: "Focused review of legal documents",
-  },
-}
-
 export function ShopifyBookingWidget({ date, timeSlot, consultationType = 'initial' }: Readonly<ShopifyBookingProps>) {
+  const { t: tCalendar } = useTranslations('calendar')
+  const { t: tBooking } = useTranslations('booking')
   const [isLoading, setIsLoading] = useState(false)
-  const consultation = CONSULTATION_TYPES[consultationType]
 
   const handleBooking = async () => {
     setIsLoading(true)
@@ -60,7 +29,7 @@ export function ShopifyBookingWidget({ date, timeSlot, consultationType = 'initi
         consultationType,
         date: date?.toISOString(),
         timeSlot,
-        price: consultation.price,
+        price: tCalendar(`consultationTypes.${consultationType}.price`),
       }
 
       console.log('Creating Shopify booking:', cartData)
@@ -87,32 +56,34 @@ export function ShopifyBookingWidget({ date, timeSlot, consultationType = 'initi
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ShoppingCart className="h-5 w-5" />
-          Book & Pay
+          {tBooking('title')}
         </CardTitle>
         <CardDescription>
-          Secure payment through Shopify
+          {tBooking('subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Consultation Details */}
         <div className="p-4 bg-gray-50 rounded-xl">
-          <h3 className="font-semibold text-lg mb-3">{consultation.title}</h3>
-          
+          <h3 className="font-semibold text-lg mb-3">
+            {tCalendar(`consultationTypes.${consultationType}.name`)}
+          </h3>
+
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>Duration: {consultation.duration}</span>
+              <span>{tBooking('duration')} {tCalendar(`consultationTypes.${consultationType}.duration`)}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <DollarSign className="h-4 w-4" />
               <span className="font-semibold text-primary-600">
-                {consultation.price}
+                {tCalendar(`consultationTypes.${consultationType}.price`)}
               </span>
             </div>
           </div>
 
           <p className="text-sm text-gray-600 mt-3">
-            {consultation.description}
+            {tCalendar(`consultationTypes.${consultationType}.description`)}
           </p>
         </div>
 
@@ -120,14 +91,14 @@ export function ShopifyBookingWidget({ date, timeSlot, consultationType = 'initi
         {date && timeSlot && (
           <div className="p-4 border-2 border-primary-200 rounded-xl bg-primary-50">
             <p className="text-sm font-medium text-gray-700 mb-1">
-              Selected Appointment:
+              {tBooking('selectedAppointment')}
             </p>
             <p className="font-semibold text-primary-700">
-              {date.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              {date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
               })}
             </p>
             <p className="text-sm text-primary-600 mt-1">
@@ -144,19 +115,19 @@ export function ShopifyBookingWidget({ date, timeSlot, consultationType = 'initi
           size="lg"
         >
           {isLoading ? (
-            'Processing...'
+            tBooking('processing')
           ) : (
             <>
               <ShoppingCart className="h-5 w-5 mr-2" />
-              Book & Pay with Shopify
+              {tBooking('bookAndPay')}
             </>
           )}
         </Button>
 
         {/* Payment Info */}
         <div className="text-xs text-center text-gray-500 space-y-1">
-          <p>Secure payment powered by Shopify</p>
-          <p>💳 Credit Card • 📱 Digital Wallets • 🏦 Bank Transfer</p>
+          <p>{tBooking('paymentInfo')}</p>
+          <p>{tBooking('paymentMethods')}</p>
         </div>
       </CardContent>
     </Card>

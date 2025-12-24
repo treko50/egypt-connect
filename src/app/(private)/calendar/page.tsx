@@ -7,19 +7,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShopifyBookingWidget } from "@/components/ShopifyBookingWidget"
 import { EnhancedCalendar } from "@/components/EnhancedCalendar"
+import { useTranslations } from "@/components/LanguageProvider"
 
-const DMV_PRICING = {
-  initial: { duration: 60, price: 299, name: "Initial Consultation" },
-  standard: { duration: 90, price: 449, name: "Standard Consultation" },
-  premium: { duration: 120, price: 649, name: "Premium Consultation" },
-  followUp: { duration: 30, price: 149, name: "Follow-up Session" },
-  documentReview: { duration: 45, price: 199, name: "Document Review" }
-}
+const DMV_PRICING_KEYS = {
+  initial: "initial",
+  standard: "standard",
+  premium: "premium",
+  followUp: "followUp",
+  documentReview: "documentReview"
+} as const
 
 export default function CalendarPage() {
+  const { t } = useTranslations('calendar')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null)
-  const [consultationType, setConsultationType] = useState<keyof typeof DMV_PRICING>('initial')
+  const [consultationType, setConsultationType] = useState<keyof typeof DMV_PRICING_KEYS>('initial')
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -36,10 +38,10 @@ export default function CalendarPage() {
         <div className="container mx-auto px-4">
           <div className="mb-8">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-              Calendar & Scheduling
+              {t('title')}
             </h1>
             <p className="text-gray-600 mt-2 text-lg">
-              Book your consultation and manage appointments
+              {t('subtitle')}
             </p>
           </div>
 
@@ -58,22 +60,22 @@ export default function CalendarPage() {
               {selectedDate && selectedTimeSlot && (
                 <Card className="shadow-lg border-gray-200">
                   <CardHeader>
-                    <CardTitle className="text-xl">Select Service</CardTitle>
-                    <CardDescription>Choose your consultation type</CardDescription>
+                    <CardTitle className="text-xl">{t('booking.selectService')}</CardTitle>
+                    <CardDescription>{t('booking.chooseType')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {Object.entries(DMV_PRICING).map(([key, value]) => (
+                    {Object.entries(DMV_PRICING_KEYS).map(([key, typeKey]) => (
                       <Button
                         key={key}
                         variant={consultationType === key ? "default" : "outline"}
                         className="w-full justify-between h-auto py-4 px-4"
-                        onClick={() => setConsultationType(key as keyof typeof DMV_PRICING)}
+                        onClick={() => setConsultationType(key as keyof typeof DMV_PRICING_KEYS)}
                       >
                         <div className="text-left">
-                          <div className="font-semibold">{value.name}</div>
-                          <div className="text-xs opacity-80">{value.duration} minutes</div>
+                          <div className="font-semibold">{t(`consultationTypes.${typeKey}.name`)}</div>
+                          <div className="text-xs opacity-80">{t(`consultationTypes.${typeKey}.duration`)}</div>
                         </div>
-                        <div className="font-bold">${value.price}</div>
+                        <div className="font-bold">{t(`consultationTypes.${typeKey}.price`)}</div>
                       </Button>
                     ))}
                   </CardContent>
@@ -92,14 +94,14 @@ export default function CalendarPage() {
               {/* Info Card */}
               <Card className="shadow-lg border-primary-200 bg-gradient-to-br from-primary-50 to-white">
                 <CardHeader>
-                  <CardTitle className="text-lg">Need Help?</CardTitle>
+                  <CardTitle className="text-lg">{t('help.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
                   <p className="text-gray-600">
-                    All times are shown in your local timezone. You can upload relevant documents before or after booking.
+                    {t('help.description')}
                   </p>
                   <Button variant="outline" size="sm" className="w-full">
-                    View FAQ
+                    {t('help.faq')}
                   </Button>
                 </CardContent>
               </Card>

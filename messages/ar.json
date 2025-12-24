@@ -2,7 +2,31 @@
   "common": {
     "language": "اللغة",
     "english": "English",
-    "arabic": "العربية"
+    "arabic": "العربية",
+    "days": {
+      "sun": "الأحد",
+      "mon": "الاثنين",
+      "tue": "الثلاثاء",
+      "wed": "الأربعاء",
+      "thu": "الخميس",
+      "fri": "الجمعة",
+      "sat": "السبت"
+    },
+    "months": {
+      "january": "يناير",
+      "february": "فبراير",
+      "march": "مارس",
+      "april": "أبريل",
+      "may": "مايو",
+      "june": "يونيو",
+      "july": "يوليو",
+      "august": "أغسطس",
+      "september": "سبتمبر",
+      "october": "أكتوبر",
+      "november": "نوفمبر",
+      "december": "ديسمبر"
+    },
+    "minutes": "دقيقة"
   },
   "navigation": {
     "home": "الرئيسية",
@@ -53,17 +77,72 @@
     }
   },
   "calendar": {
-    "title": "التقويم",
-    "subtitle": "إدارة جدولك الزمني ومواعيدك",
+    "title": "التقويم والجدولة",
+    "subtitle": "احجز استشارتك وأدر مواعيدك",
     "newEvent": "حدث جديد",
     "today": "اليوم",
     "timeSlots": "الأوقات المتاحة",
     "selectDate": "حدد تاريخاً لعرض الأوقات المتاحة",
-    "consultationType": "نوع الاستشارة",
-    "consultationSubtitle": "اختر مدة الاستشارة",
-    "initial": "استشارة أولية (60 دقيقة) - 500 جنيه",
-    "followUp": "استشارة متابعة (30 دقيقة) - 300 جنيه",
-    "extended": "استشارة ممتدة (120 دقيقة) - 900 جنيه"
+    "viewMode": {
+      "month": "شهر",
+      "week": "أسبوع",
+      "day": "يوم"
+    },
+    "legend": {
+      "today": "اليوم",
+      "selected": "محدد",
+      "hasEvents": "يحتوي على أحداث",
+      "past": "ماضي"
+    },
+    "timeSlot": {
+      "booked": "محجوز",
+      "noAvailable": "لا توجد أوقات متاحة",
+      "selectDifferent": "يرجى اختيار تاريخ مختلف"
+    },
+    "booking": {
+      "summary": "ملخص الحجز",
+      "date": "التاريخ",
+      "selectService": "اختر الخدمة",
+      "chooseType": "اختر نوع الاستشارة"
+    },
+    "consultationTypes": {
+      "initial": {
+        "name": "استشارة أولية",
+        "duration": "60 دقيقة",
+        "price": "299 دولار",
+        "description": "استشارة أولية شاملة لفهم احتياجاتك القانونية"
+      },
+      "standard": {
+        "name": "استشارة قياسية",
+        "duration": "90 دقيقة",
+        "price": "449 دولار",
+        "description": "جلسة ممتدة للمسائل القانونية المعقدة"
+      },
+      "premium": {
+        "name": "استشارة مميزة",
+        "duration": "120 دقيقة",
+        "price": "649 دولار",
+        "description": "استشارة شاملة مع دعم موسع"
+      },
+      "followUp": {
+        "name": "جلسة متابعة",
+        "duration": "30 دقيقة",
+        "price": "149 دولار",
+        "description": "متابعة سريعة للعملاء الحاليين"
+      },
+      "documentReview": {
+        "name": "مراجعة مستندات",
+        "duration": "45 دقيقة",
+        "price": "199 دولار",
+        "description": "مراجعة مركزة للمستندات القانونية"
+      }
+    },
+    "help": {
+      "title": "هل تحتاج مساعدة؟",
+      "description": "جميع الأوقات معروضة بالمنطقة الزمنية المحلية. يمكنك تحميل المستندات ذات الصلة قبل أو بعد الحجز.",
+      "faq": "عرض الأسئلة الشائعة"
+    },
+    "moreEvents": "المزيد"
   },
   "profile": {
     "title": "الملف الشخصي",
@@ -96,7 +175,7 @@
   "booking": {
     "title": "احجز وادفع",
     "subtitle": "دفع آمن عبر Shopify",
-    "duration": "المدة",
+    "duration": "المدة:",
     "selectedAppointment": "الموعد المحدد:",
     "bookAndPay": "احجز وادفع عبر Shopify",
     "processing": "جاري المعالجة...",
@@ -143,5 +222,72 @@
       "location": "القاهرة، مصر"
     },
     "copyright": "© 2024 Egypt Connect. جميع الحقوق محفوظة."
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "إدارة حسابك وتفضيلاتك",
+    "tabs": {
+      "profile": "الملف الشخصي",
+      "account": "الحساب",
+      "notifications": "الإشعارات",
+      "documents": "المستندات",
+      "billing": "الفواتير"
+    },
+    "profile": {
+      "title": "معلومات الملف الشخصي",
+      "subtitle": "تحديث بياناتك الشخصية",
+      "editProfile": "تعديل الملف الشخصي",
+      "cancel": "إلغاء",
+      "save": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "photoInstruction": "انقر على صورتك لتغييرها",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "البريد الإلكتروني",
+      "emailHelper": "لا يمكن تغيير البريد الإلكتروني هنا",
+      "phone": "رقم الهاتف",
+      "location": "الموقع",
+      "timezone": "المنطقة الزمنية",
+      "language": "اللغة"
+    },
+    "account": {
+      "title": "إعدادات الحساب",
+      "subtitle": "إدارة أمان حسابك وتفضيلاتك",
+      "security": "الأمان",
+      "twoFactor": "المصادقة الثنائية",
+      "twoFactorDesc": "أضف طبقة إضافية من الأمان",
+      "changePassword": "تغيير كلمة المرور",
+      "changePasswordDesc": "قم بتحديث كلمة المرور بانتظام",
+      "accountInfo": "معلومات الحساب",
+      "memberSince": "عضو منذ",
+      "accountStatus": "حالة الحساب",
+      "verified": "موثق",
+      "unverified": "غير موثق"
+    },
+    "notifications": {
+      "title": "تفضيلات الإشعارات",
+      "subtitle": "إدارة كيفية تلقي الإشعارات",
+      "email": "إشعارات البريد الإلكتروني",
+      "bookingConfirmation": "تأكيدات الحجز",
+      "reminders": "تذكيرات المواعيد",
+      "updates": "الأخبار والتحديثات",
+      "sms": "إشعارات الرسائل النصية",
+      "smsReminders": "تذكيرات SMS",
+      "smsConfirmation": "تأكيدات SMS",
+      "savePreferences": "حفظ التفضيلات"
+    },
+    "documents": {
+      "title": "المستندات",
+      "subtitle": "إدارة المستندات المحملة"
+    },
+    "billing": {
+      "title": "الفواتير والمدفوعات",
+      "subtitle": "إدارة طرق الدفع وسجل الفواتير",
+      "paymentMethods": "طرق الدفع",
+      "noPaymentMethods": "لم تتم إضافة طرق دفع",
+      "addPaymentMethod": "إضافة طريقة دفع",
+      "billingHistory": "سجل الفواتير",
+      "noBillingHistory": "لا يوجد سجل فواتير متاح"
+    }
   }
 }

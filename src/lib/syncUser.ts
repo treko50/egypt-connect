@@ -1,5 +1,5 @@
 import { User } from '@clerk/nextjs/server'
-import { supabase } from './supabase'
+import { supabaseAdmin } from './supabase'
 
 /**
  * Syncs a Clerk user to Supabase database
@@ -7,7 +7,7 @@ import { supabase } from './supabase'
  */
 export async function syncUserToSupabase(clerkUser: User) {
   try {
-    const { data: existingUser } = await supabase
+    const { data: existingUser } = await supabaseAdmin
       .from('users')
       .select('id')
       .eq('clerk_id', clerkUser.id)
@@ -23,13 +23,17 @@ export async function syncUserToSupabase(clerkUser: User) {
 
     if (existingUser) {
       // Update existing user
-      await supabase
+      await supabaseAdmin
         .from('users')
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Supabase type inference issue
         .update(userData)
         .eq('clerk_id', clerkUser.id)
     } else {
       // Create new user
-      await supabase.from('users').insert(userData)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - Supabase type inference issue
+      await supabaseAdmin.from('users').insert(userData)
     }
 
     return true
