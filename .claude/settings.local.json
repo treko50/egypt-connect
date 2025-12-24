@@ -24,7 +24,12 @@
       "Bash(node -e:*)",
       "Bash(exit 0)",
       "Bash(if exist \".next\" rmdir /s /q \".next\")",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(grep:*)",
+      "Bash(stripe --version:*)",
+      "Bash(npm install)",
+      "Bash(npm test)",
+      "Bash(npm run test:coverage:*)"
     ]
   }
 }

@@ -16,8 +16,8 @@
     "@prisma/client": "^5.21.1",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.1.0",
-    "@shopify/app-bridge": "^3.7.11",
-    "@shopify/app-bridge-react": "^4.2.8",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.0",
     "@supabase/supabase-js": "^2.89.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -25,6 +25,7 @@
     "next": "15.0.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "stripe": "^20.1.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },

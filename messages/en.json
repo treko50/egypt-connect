@@ -174,12 +174,12 @@
   },
   "booking": {
     "title": "Book & Pay",
-    "subtitle": "Secure payment through Shopify",
+    "subtitle": "Secure payment through Stripe",
     "duration": "Duration:",
     "selectedAppointment": "Selected Appointment:",
-    "bookAndPay": "Book & Pay with Shopify",
+    "bookAndPay": "Book & Pay with Stripe",
     "processing": "Processing...",
-    "paymentInfo": "Secure payment powered by Shopify",
+    "paymentInfo": "Secure payment powered by Stripe",
     "paymentMethods": "💳 Credit Card • 📱 Digital Wallets • 🏦 Bank Transfer"
   },
   "judge": {

@@ -174,12 +174,12 @@
   },
   "booking": {
     "title": "احجز وادفع",
-    "subtitle": "دفع آمن عبر Shopify",
+    "subtitle": "دفع آمن عبر Stripe",
     "duration": "المدة:",
     "selectedAppointment": "الموعد المحدد:",
-    "bookAndPay": "احجز وادفع عبر Shopify",
+    "bookAndPay": "احجز وادفع عبر Stripe",
     "processing": "جاري المعالجة...",
-    "paymentInfo": "دفع آمن مدعوم من Shopify",
+    "paymentInfo": "دفع آمن مدعوم من Stripe",
     "paymentMethods": "💳 بطاقة ائتمان • 📱 محافظ رقمية • 🏦 تحويل بنكي"
   },
   "judge": {

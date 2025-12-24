@@ -80,6 +80,10 @@ export interface Database {
           client_notes: string | null
           judge_notes: string | null
           internal_notes: string | null
+          payment_status: 'pending' | 'paid' | 'failed' | 'refunded'
+          payment_intent_id: string | null
+          amount_paid: number | null
+          currency: string
           created_at: string
           updated_at: string
         }
@@ -97,6 +101,10 @@ export interface Database {
           client_notes?: string | null
           judge_notes?: string | null
           internal_notes?: string | null
+          payment_status?: 'pending' | 'paid' | 'failed' | 'refunded'
+          payment_intent_id?: string | null
+          amount_paid?: number | null
+          currency?: string
           created_at?: string
           updated_at?: string
         }
@@ -114,6 +122,10 @@ export interface Database {
           client_notes?: string | null
           judge_notes?: string | null
           internal_notes?: string | null
+          payment_status?: 'pending' | 'paid' | 'failed' | 'refunded'
+          payment_intent_id?: string | null
+          amount_paid?: number | null
+          currency?: string
           created_at?: string
           updated_at?: string
         }

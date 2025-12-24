@@ -42,9 +42,15 @@ const config: Config = {
         allowSyntheticDefaultImports: true,
       },
     }],
+    '^.+\\.mjs$': ['ts-jest', {
+      tsconfig: {
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      },
+    }],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(.*\\.mjs$))',
+    'node_modules/(?!(@clerk/.*|.*\\.mjs$))',
   ],
 };
 
