@@ -2,11 +2,13 @@
   "crons": [
     {
       "path": "/api/cron/complete-appointments",
-      "schedule": "*/15 * * * *"
+      "schedule": "0 0 * * *",
+      "comment": "Runs daily at midnight UTC (hobby plan compatible). For Pro plan, use '0 */6 * * *' (every 6 hours) or '*/15 * * * *' (every 15 min)"
     },
     {
       "path": "/api/cron/send-reminders",
-      "schedule": "0 * * * *"
+      "schedule": "0 8 * * *",
+      "comment": "Runs daily at 8 AM UTC (hobby plan compatible). For Pro plan, use '0 * * * *' (every hour) or '*/30 * * * *' (every 30 min)"
     }
   ]
 }
