@@ -9,11 +9,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 
 // Consultation type pricing in USD
 const PRICING = {
-  initial: 500, // Initial consultation: $500
-  standard: 300, // Standard consultation: $300
-  followUp: 200, // Follow-up session: $200
-  premium: 750, // Premium consultation: $750
-  documentReview: 250, // Document review: $250
+  initial: 50, // Initial consultation: $50
+  followUp: 30, // Follow-up session: $30
+  premium: 70, // Premium consultation: $70
+  documentReview: 20, // Document review: $20
 } as const
 
 export async function POST(request: Request) {

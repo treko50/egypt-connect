@@ -47,12 +47,12 @@ export default function Home() {
                 {tHome('description')}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up relative z-10">
                 <Button asChild size="lg" className="text-lg px-8 py-6 rounded-xl">
                   <Link href="/calendar">{tHome('scheduleButton')}</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 rounded-xl">
-                  <Link href="#features">{tHome('learnMore')}</Link>
+                  <Link href="/about">{tHome('learnMore')}</Link>
                 </Button>
               </div>
             </div>

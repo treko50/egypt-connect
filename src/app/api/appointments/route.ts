@@ -34,23 +34,12 @@ export async function GET(request: Request) {
       .from('appointments')
       .select(`
         *,
-        user:users!appointments_user_id_fkey (
+        user:users!user_id (
           id,
           first_name,
           last_name,
           email,
           phone
-        ),
-        assigned_judge:users!appointments_assigned_judge_id_fkey (
-          id,
-          first_name,
-          last_name,
-          judge_title
-        ),
-        parent_appointment:appointments!appointments_parent_appointment_id_fkey (
-          id,
-          title,
-          start_time
         )
       `)
       .order('start_time', { ascending: false })

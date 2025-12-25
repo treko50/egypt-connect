@@ -26,7 +26,7 @@ interface AppointmentDetail {
   description: string
   start_time: string
   end_time: string
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'needs_follow_up'
   consultation_type: string
   client_notes: string | null
   judge_notes: string | null
@@ -70,7 +70,7 @@ export function AppointmentDetailView({ appointmentId }: { appointmentId: string
 
   const [judgeNotes, setJudgeNotes] = useState('')
   const [internalNotes, setInternalNotes] = useState('')
-  const [status, setStatus] = useState<'pending' | 'confirmed' | 'cancelled' | 'completed'>('pending')
+  const [status, setStatus] = useState<'pending' | 'confirmed' | 'cancelled' | 'completed' | 'needs_follow_up'>('pending')
 
   useEffect(() => {
     fetchAppointment()
@@ -173,6 +173,13 @@ export function AppointmentDetailView({ appointmentId }: { appointmentId: string
           <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
             <XCircle className="h-4 w-4" />
             Cancelled
+          </span>
+        )
+      case 'needs_follow_up':
+        return (
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-800 text-sm font-medium rounded-full">
+            <AlertCircle className="h-4 w-4" />
+            Needs Follow-Up
           </span>
         )
       default:
@@ -414,15 +421,15 @@ export function AppointmentDetailView({ appointmentId }: { appointmentId: string
           <CardDescription>Confirm or complete this appointment</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-2">
-            {['pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
+          <div className="flex gap-2 flex-wrap">
+            {['pending', 'confirmed', 'completed', 'cancelled', 'needs_follow_up'].map((s) => (
               <Button
                 key={s}
                 variant={status === s ? 'default' : 'outline'}
                 onClick={() => setStatus(s as any)}
                 className="capitalize"
               >
-                {s}
+                {s === 'needs_follow_up' ? 'Needs Follow-Up' : s}
               </Button>
             ))}
           </div>

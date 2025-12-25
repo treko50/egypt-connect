@@ -22,34 +22,24 @@ interface Appointment {
 }
 
 export function JudgeDashboard() {
-  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [allAppointments, setAllAppointments] = useState<Appointment[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'pending' | 'completed'>('upcoming')
+  const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'pending' | 'completed' | 'cancelled'>('all')
 
   useEffect(() => {
     fetchAppointments()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFilter])
+  }, [])
 
   async function fetchAppointments() {
     setIsLoading(true)
     try {
-      let url = '/api/appointments?assignedOnly=true'
-
-      const now = new Date().toISOString()
-
-      if (activeFilter === 'upcoming') {
-        url += `&startDate=${now}&status=confirmed`
-      } else if (activeFilter === 'pending') {
-        url += '&status=pending'
-      } else if (activeFilter === 'completed') {
-        url += '&status=completed'
-      }
+      // Fetch ALL appointments for the judge
+      const url = '/api/appointments?assignedOnly=true'
 
       const response = await fetch(url)
       if (response.ok) {
         const data = await response.json()
-        setAppointments(data.appointments)
+        setAllAppointments(data.appointments || [])
       }
     } catch (error) {
       console.error('Failed to fetch appointments:', error)
@@ -57,6 +47,25 @@ export function JudgeDashboard() {
       setIsLoading(false)
     }
   }
+
+  // Filter appointments client-side based on active filter
+  const filteredAppointments = allAppointments.filter((appointment) => {
+    const now = new Date()
+    const startTime = new Date(appointment.start_time)
+
+    if (activeFilter === 'all') {
+      return true
+    } else if (activeFilter === 'upcoming') {
+      return appointment.status === 'confirmed' && startTime > now
+    } else if (activeFilter === 'pending') {
+      return appointment.status === 'pending'
+    } else if (activeFilter === 'completed') {
+      return appointment.status === 'completed'
+    } else if (activeFilter === 'cancelled') {
+      return appointment.status === 'cancelled'
+    }
+    return true
+  })
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -111,15 +120,20 @@ export function JudgeDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      {/* Stats Overview - Clickable Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <Card
+          className={`cursor-pointer transition-all hover:shadow-md ${
+            activeFilter === 'pending' ? 'ring-2 ring-yellow-500' : ''
+          }`}
+          onClick={() => setActiveFilter('pending')}
+        >
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Pending</p>
                 <p className="text-2xl font-bold text-yellow-600">
-                  {appointments.filter(a => a.status === 'pending').length}
+                  {allAppointments.filter(a => a.status === 'pending').length}
                 </p>
               </div>
               <AlertCircle className="h-8 w-8 text-yellow-600" />
@@ -127,13 +141,22 @@ export function JudgeDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className={`cursor-pointer transition-all hover:shadow-md ${
+            activeFilter === 'upcoming' ? 'ring-2 ring-blue-500' : ''
+          }`}
+          onClick={() => setActiveFilter('upcoming')}
+        >
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Confirmed</p>
+                <p className="text-sm font-medium text-gray-600">Upcoming</p>
                 <p className="text-2xl font-bold text-blue-600">
-                  {appointments.filter(a => a.status === 'confirmed').length}
+                  {allAppointments.filter(a => {
+                    const now = new Date()
+                    const startTime = new Date(a.start_time)
+                    return a.status === 'confirmed' && startTime > now
+                  }).length}
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-blue-600" />
@@ -141,13 +164,18 @@ export function JudgeDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className={`cursor-pointer transition-all hover:shadow-md ${
+            activeFilter === 'completed' ? 'ring-2 ring-green-500' : ''
+          }`}
+          onClick={() => setActiveFilter('completed')}
+        >
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Completed</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {appointments.filter(a => a.status === 'completed').length}
+                  {allAppointments.filter(a => a.status === 'completed').length}
                 </p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
@@ -155,12 +183,36 @@ export function JudgeDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card
+          className={`cursor-pointer transition-all hover:shadow-md ${
+            activeFilter === 'cancelled' ? 'ring-2 ring-red-500' : ''
+          }`}
+          onClick={() => setActiveFilter('cancelled')}
+        >
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Cancelled</p>
+                <p className="text-2xl font-bold text-red-600">
+                  {allAppointments.filter(a => a.status === 'cancelled').length}
+                </p>
+              </div>
+              <XCircle className="h-8 w-8 text-red-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card
+          className={`cursor-pointer transition-all hover:shadow-md ${
+            activeFilter === 'all' ? 'ring-2 ring-gray-500' : ''
+          }`}
+          onClick={() => setActiveFilter('all')}
+        >
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-900">{appointments.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{allAppointments.length}</p>
               </div>
               <Calendar className="h-8 w-8 text-gray-600" />
             </div>
@@ -168,33 +220,22 @@ export function JudgeDashboard() {
         </Card>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {[
-          { key: 'all', label: 'All Appointments' },
-          { key: 'upcoming', label: 'Upcoming' },
-          { key: 'pending', label: 'Pending Approval' },
-          { key: 'completed', label: 'Completed' },
-        ].map((filter) => (
-          <Button
-            key={filter.key}
-            variant={activeFilter === filter.key ? 'default' : 'outline'}
-            onClick={() => setActiveFilter(filter.key as any)}
-          >
-            {filter.label}
-          </Button>
-        ))}
-      </div>
-
       {/* Appointments List */}
       <Card>
         <CardHeader>
-          <CardTitle>Appointments</CardTitle>
+          <CardTitle>
+            {activeFilter === 'upcoming' && 'Upcoming Appointments'}
+            {activeFilter === 'pending' && 'Pending Appointments'}
+            {activeFilter === 'completed' && 'Completed Appointments'}
+            {activeFilter === 'cancelled' && 'Cancelled Appointments'}
+            {activeFilter === 'all' && 'All Appointments'}
+          </CardTitle>
           <CardDescription>
             {activeFilter === 'upcoming' && 'Confirmed appointments scheduled for the future'}
             {activeFilter === 'pending' && 'Appointments awaiting your confirmation'}
             {activeFilter === 'completed' && 'Past appointments that have been completed'}
-            {activeFilter === 'all' && 'All your appointments'}
+            {activeFilter === 'cancelled' && 'Appointments that have been cancelled'}
+            {activeFilter === 'all' && 'Click a stat card above to filter appointments'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -202,14 +243,14 @@ export function JudgeDashboard() {
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
             </div>
-          ) : appointments.length === 0 ? (
+          ) : filteredAppointments.length === 0 ? (
             <div className="text-center py-12">
               <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">No appointments found</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {appointments.map((appointment) => {
+              {filteredAppointments.map((appointment) => {
                 const datetime = formatDateTime(appointment.start_time)
                 return (
                   <div

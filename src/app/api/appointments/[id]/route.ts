@@ -1,6 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { sendFollowUpRequestEmail, sendCompletionEmail } from '@/lib/email/send-appointment-emails'
 
 // GET /api/appointments/[id] - Get single appointment with full details
 export async function GET(
@@ -34,33 +35,25 @@ export async function GET(
       .from('appointments')
       .select(`
         *,
-        user:users!appointments_user_id_fkey (
+        user:users!user_id (
           id,
           first_name,
           last_name,
           email,
           phone,
           location
-        ),
-        assigned_judge:users!appointments_assigned_judge_id_fkey (
-          id,
-          first_name,
-          last_name,
-          judge_title,
-          judge_bio
-        ),
-        parent_appointment:appointments!appointments_parent_appointment_id_fkey (
-          id,
-          title,
-          start_time,
-          status
         )
       `)
       .eq('id', appointmentId)
       .single()
 
     if (error || !appointmentData) {
-      return NextResponse.json({ error: 'Appointment not found' }, { status: 404 })
+      console.error('Error fetching appointment:', appointmentId, error)
+      return NextResponse.json({
+        error: 'Appointment not found',
+        details: error?.message,
+        appointmentId
+      }, { status: 404 })
     }
 
     const appointment: any = appointmentData
@@ -128,7 +121,7 @@ export async function PATCH(
     // Get user from Supabase to check role
     const { data: userData, error: userError } = await supabaseAdmin
       .from('users')
-      .select('id, role')
+      .select('id, role, first_name, last_name')
       .eq('clerk_id', userId)
       .single()
 
@@ -136,12 +129,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const user: { id: string; role: string } = userData
+    const user: { id: string; role: string; first_name: string; last_name: string } = userData
 
     // Get existing appointment
     const { data: existingApptData, error: fetchError } = await supabaseAdmin
       .from('appointments')
-      .select('user_id, assigned_judge_id')
+      .select('user_id, assigned_judge_id, status')
       .eq('id', appointmentId)
       .single()
 
@@ -149,7 +142,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Appointment not found' }, { status: 404 })
     }
 
-    const existingAppt: { user_id: string; assigned_judge_id: string | null } = existingApptData
+    const existingAppt: { user_id: string; assigned_judge_id: string | null; status: string } = existingApptData
 
     const body = await request.json()
     const { status, client_notes, judge_notes, internal_notes } = body
@@ -197,6 +190,62 @@ export async function PATCH(
     if (error) {
       console.error('Error updating appointment:', error)
       return NextResponse.json({ error: 'Failed to update appointment' }, { status: 500 })
+    }
+
+    // Send email notifications based on status change
+    if (user.role === 'judge' && status !== undefined && status !== existingAppt.status) {
+      // Fetch full appointment details for email
+      const { data: fullAppt } = await supabaseAdmin
+        .from('appointments')
+        .select(`
+          *,
+          user:users!user_id (first_name, last_name, email)
+        `)
+        .eq('id', appointmentId)
+        .single()
+
+      if (fullAppt) {
+        const appt = fullAppt as any
+        const clientName = `${appt.user.first_name} ${appt.user.last_name}`
+        const judgeName = `${user.first_name} ${user.last_name}`
+
+        const startDate = new Date(appt.start_time)
+        const appointmentDate = startDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+
+        try {
+          if (status === 'needs_follow_up') {
+            await sendFollowUpRequestEmail({
+              clientEmail: appt.user.email,
+              clientName,
+              appointmentId: appt.id,
+              appointmentTitle: appt.title,
+              appointmentDate,
+              consultationType: appt.consultation_type,
+              judgeNotes: appt.judge_notes,
+              judgeName,
+            })
+          } else if (status === 'completed') {
+            await sendCompletionEmail({
+              clientEmail: appt.user.email,
+              clientName,
+              appointmentId: appt.id,
+              appointmentTitle: appt.title,
+              appointmentDate,
+              consultationType: appt.consultation_type,
+              judgeNotes: appt.judge_notes,
+              judgeName,
+            })
+          }
+        } catch (emailError) {
+          console.error('Failed to send status change email:', emailError)
+          // Non-critical error, continue
+        }
+      }
     }
 
     // Filter internal notes for clients

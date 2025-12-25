@@ -76,7 +76,7 @@ export interface Database {
           description: string | null
           start_time: string
           end_time: string
-          status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+          status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'needs_follow_up'
           client_notes: string | null
           judge_notes: string | null
           internal_notes: string | null
@@ -84,6 +84,8 @@ export interface Database {
           payment_intent_id: string | null
           amount_paid: number | null
           currency: string
+          meeting_url: string | null
+          meeting_provider: string
           created_at: string
           updated_at: string
         }
@@ -97,7 +99,7 @@ export interface Database {
           description?: string | null
           start_time: string
           end_time: string
-          status?: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+          status?: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'needs_follow_up'
           client_notes?: string | null
           judge_notes?: string | null
           internal_notes?: string | null
@@ -105,6 +107,8 @@ export interface Database {
           payment_intent_id?: string | null
           amount_paid?: number | null
           currency?: string
+          meeting_url?: string | null
+          meeting_provider?: string
           created_at?: string
           updated_at?: string
         }
@@ -118,7 +122,7 @@ export interface Database {
           description?: string | null
           start_time?: string
           end_time?: string
-          status?: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+          status?: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'needs_follow_up'
           client_notes?: string | null
           judge_notes?: string | null
           internal_notes?: string | null
@@ -126,6 +130,8 @@ export interface Database {
           payment_intent_id?: string | null
           amount_paid?: number | null
           currency?: string
+          meeting_url?: string | null
+          meeting_provider?: string
           created_at?: string
           updated_at?: string
         }

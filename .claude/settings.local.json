@@ -29,7 +29,9 @@
       "Bash(stripe --version:*)",
       "Bash(npm install)",
       "Bash(npm test)",
-      "Bash(npm run test:coverage:*)"
+      "Bash(npm run test:coverage:*)",
+      "Bash(node scripts/diagnose-appointments.js:*)",
+      "Bash(timeout /t 8 /nobreak)"
     ]
   }
 }

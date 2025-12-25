@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
-export type ConsultationType = 'initial' | 'followUp' | 'standard' | 'premium' | 'documentReview'
+export type ConsultationType = 'initial' | 'followUp' | 'premium' | 'documentReview'
 
 export interface BookingFormData {
   // Step 1: Date/Time/Type Selection
@@ -50,9 +50,18 @@ const initialFormData: BookingFormData = {
 
 const BookingFlowContext = createContext<BookingFlowContextType | undefined>(undefined)
 
-export function BookingFlowProvider({ children }: { children: ReactNode }) {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [formData, setFormData] = useState<BookingFormData>(initialFormData)
+interface BookingFlowProviderProps {
+  children: ReactNode
+  initialData?: Partial<BookingFormData>
+  initialStep?: number
+}
+
+export function BookingFlowProvider({ children, initialData, initialStep = 1 }: BookingFlowProviderProps) {
+  const [currentStep, setCurrentStep] = useState(initialStep)
+  const [formData, setFormData] = useState<BookingFormData>({
+    ...initialFormData,
+    ...initialData,
+  })
 
   const updateFormData = (data: Partial<BookingFormData>) => {
     setFormData(prev => ({ ...prev, ...data }))
@@ -64,18 +73,26 @@ export function BookingFlowProvider({ children }: { children: ReactNode }) {
   }
 
   const canProceedToStep = (step: number): boolean => {
+    const hasRequiredFields = !!(formData.selectedDate && formData.selectedTime && formData.title)
+    const needsParentAppointment = formData.consultationType === 'followUp' || formData.consultationType === 'documentReview'
+    const hasParentAppointment = !!formData.parentAppointmentId
+
+    // For follow-up and document review, parent appointment is required
+    const meetsParentRequirement = !needsParentAppointment || hasParentAppointment
+
     switch (step) {
       case 1:
         return true
       case 2:
         // Can proceed to documents if date/time/type are selected
-        return !!(formData.selectedDate && formData.selectedTime && formData.title)
+        // AND if followUp or documentReview, must have parent appointment selected
+        return hasRequiredFields && meetsParentRequirement
       case 3:
         // Can proceed to notes (documents are optional)
-        return !!(formData.selectedDate && formData.selectedTime && formData.title)
+        return hasRequiredFields && meetsParentRequirement
       case 4:
         // Can proceed to payment if all previous steps are done
-        return !!(formData.selectedDate && formData.selectedTime && formData.title)
+        return hasRequiredFields && meetsParentRequirement
       default:
         return false
     }

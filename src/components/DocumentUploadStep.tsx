@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useBookingFlow } from './BookingFlowProvider'
 import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Upload, X, FileText } from 'lucide-react'
+import { Upload, X, FileText, Calendar, Clock, FileCheck } from 'lucide-react'
 
 interface UploadedDocument {
   name: string
@@ -72,6 +72,44 @@ export function DocumentUploadStep() {
 
   return (
     <div className="space-y-6">
+      {/* Appointment Summary Card - shown when coming from calendar */}
+      {formData.selectedDate && formData.selectedTime && (
+        <Card className="border-primary-200 bg-gradient-to-br from-primary-50 to-white">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileCheck className="h-5 w-5 text-primary-600" />
+              Appointment Details
+            </CardTitle>
+            <CardDescription>Review your selected appointment</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-start gap-3">
+              <Calendar className="h-5 w-5 text-primary-600 mt-0.5" />
+              <div>
+                <p className="font-medium text-gray-900">
+                  {formData.selectedDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+                <p className="text-sm text-gray-600">{formData.title}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock className="h-5 w-5 text-primary-600" />
+              <p className="font-medium text-gray-900">{formData.selectedTime}</p>
+            </div>
+            {formData.description && (
+              <div className="pt-2 border-t border-primary-100">
+                <p className="text-sm text-gray-600">{formData.description}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Upload Documents (Optional)</CardTitle>
@@ -150,10 +188,10 @@ export function DocumentUploadStep() {
           variant="outline"
           onClick={() => setCurrentStep(1)}
         >
-          Back
+          ← Back to Details
         </Button>
         <Button onClick={() => setCurrentStep(3)}>
-          Continue to Notes
+          Continue to Notes →
         </Button>
       </div>
     </div>

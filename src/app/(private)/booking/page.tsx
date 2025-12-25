@@ -1,8 +1,10 @@
 "use client"
 
+import { useSearchParams } from 'next/navigation'
+import { useMemo, useState } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { BookingFlowProvider, useBookingFlow } from '@/components/BookingFlowProvider'
+import { BookingFlowProvider, useBookingFlow, ConsultationType, BookingFormData } from '@/components/BookingFlowProvider'
 import { BookingFlowStepper } from '@/components/BookingFlowStepper'
 import { DocumentUploadStep } from '@/components/DocumentUploadStep'
 import { ClientNotesStep } from '@/components/ClientNotesStep'
@@ -14,45 +16,44 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { FollowUpSelector } from '@/components/FollowUpSelector'
+import { DocumentReviewSelector } from '@/components/DocumentReviewSelector'
+import { Calendar, Clock, ChevronDown, ChevronUp } from 'lucide-react'
 
 const CONSULTATION_TYPES = {
   initial: {
     name: 'Initial Consultation',
     duration: '60 minutes',
-    price: '$500',
-    description: 'Comprehensive legal consultation for new matters',
+    price: '$50',
+    description: 'For most regular cases - comprehensive legal consultation to understand your needs',
   },
-  standard: {
-    name: 'Standard Consultation',
-    duration: '45 minutes',
-    price: '$300',
-    description: 'Standard legal advice and guidance',
+  premium: {
+    name: 'Premium Initial Consultation',
+    duration: '90 minutes',
+    price: '$70',
+    description: 'For complex cases requiring deeper analysis - ideal for matters with 3+ documents or multiple legal issues',
   },
   followUp: {
     name: 'Follow-up Session',
     duration: '30 minutes',
-    price: '$200',
-    description: 'Continue previous consultation',
-  },
-  premium: {
-    name: 'Premium Consultation',
-    duration: '90 minutes',
-    price: '$750',
-    description: 'Extended session for complex matters',
+    price: '$30',
+    description: 'When requested by the Judge or when you need more details regarding a previous consultation',
   },
   documentReview: {
     name: 'Document Review',
-    duration: '45 minutes',
-    price: '$250',
-    description: 'Review and analysis of legal documents',
+    duration: '15 minutes',
+    price: '$20',
+    description: 'Submit new documents for the Judge to review and prepare - focused on document analysis with brief guidance on next steps',
   },
 }
 
 function BookingStepContent() {
   const { currentStep, formData, updateFormData, setCurrentStep, canProceedToStep } = useBookingFlow()
+  const [isDateTimeExpanded, setIsDateTimeExpanded] = useState(!formData.selectedDate || !formData.selectedTime)
 
   // Step 1: Date, Time, and Type Selection
   if (currentStep === 1) {
+    const hasPrefilledDateTime = formData.selectedDate && formData.selectedTime
+
     return (
       <div className="space-y-6">
         <Card>
@@ -60,20 +61,22 @@ function BookingStepContent() {
             <CardTitle>Select Consultation Type</CardTitle>
             <CardDescription>Choose the type of consultation you need</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {Object.entries(CONSULTATION_TYPES).map(([key, type]) => (
-              <Button
-                key={key}
-                variant={formData.consultationType === key ? 'default' : 'outline'}
-                className="w-full justify-between h-auto py-4 px-4"
-                onClick={() => updateFormData({ consultationType: key as any })}
-              >
-                <div className="text-left">
-                  <div className="font-semibold">{type.name}</div>
-                  <div className="text-xs opacity-80">{type.duration}</div>
-                </div>
-                <div className="font-bold">{type.price}</div>
-              </Button>
+              <div key={key} className="space-y-1">
+                <Button
+                  variant={formData.consultationType === key ? 'default' : 'outline'}
+                  className="w-full justify-between h-auto py-4 px-4"
+                  onClick={() => updateFormData({ consultationType: key as any })}
+                >
+                  <div className="text-left">
+                    <div className="font-semibold">{type.name}</div>
+                    <div className="text-xs opacity-80">{type.duration}</div>
+                  </div>
+                  <div className="font-bold">{type.price}</div>
+                </Button>
+                <p className="text-xs text-gray-500 px-2">({type.description})</p>
+              </div>
             ))}
           </CardContent>
         </Card>
@@ -81,39 +84,98 @@ function BookingStepContent() {
         {/* Follow-up Selector (if follow-up type selected) */}
         {formData.consultationType === 'followUp' && <FollowUpSelector />}
 
+        {/* Document Review Selector (if document review type selected) */}
+        {formData.consultationType === 'documentReview' && <DocumentReviewSelector />}
+
         <Card>
           <CardHeader>
-            <CardTitle>Select Date & Time</CardTitle>
-            <CardDescription>Choose when you&apos;d like your consultation</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Date & Time</CardTitle>
+                <CardDescription>
+                  {hasPrefilledDateTime && !isDateTimeExpanded
+                    ? 'Your selected appointment time'
+                    : 'Choose when you\'d like your consultation'}
+                </CardDescription>
+              </div>
+              {hasPrefilledDateTime && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsDateTimeExpanded(!isDateTimeExpanded)}
+                  className="ml-2"
+                >
+                  {isDateTimeExpanded ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 mr-1" />
+                      Collapse
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-1" />
+                      Change
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
-            <EnhancedCalendar
-              onDateSelect={(date) => updateFormData({ selectedDate: date })}
-              onTimeSelect={(time) => updateFormData({ selectedTime: time })}
-            />
+            {hasPrefilledDateTime && !isDateTimeExpanded ? (
+              // Collapsed view showing selected date/time
+              <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex items-center gap-2 text-primary-700">
+                    <Calendar className="h-5 w-5" />
+                    <div>
+                      <div className="font-semibold">
+                        {formData.selectedDate?.toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-primary-700">
+                    <Clock className="h-5 w-5" />
+                    <div className="font-semibold">{formData.selectedTime}</div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Expanded view with calendar
+              <EnhancedCalendar
+                onDateSelect={(date) => updateFormData({ selectedDate: date })}
+                onTimeSelect={(time) => updateFormData({ selectedTime: time })}
+              />
+            )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Appointment Details</CardTitle>
-            <CardDescription>Provide information about your consultation</CardDescription>
+            <CardTitle>Case Information</CardTitle>
+            <CardDescription>Provide details about your legal matter</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title">Case Title *</Label>
               <Input
                 id="title"
-                placeholder="e.g., Contract Review, Legal Advice"
+                placeholder="e.g., Employment Contract Dispute, Immigration Application, Property Sale"
                 value={formData.title}
                 onChange={(e) => updateFormData({ title: e.target.value })}
+                required
               />
+              <p className="text-xs text-gray-500 mt-1">Brief title describing your legal matter</p>
             </div>
             <div>
-              <Label htmlFor="description">Description (Optional)</Label>
+              <Label htmlFor="description">Additional Details (Optional)</Label>
               <Textarea
                 id="description"
-                placeholder="Provide any additional context about your consultation needs"
+                placeholder="Add any specific details or questions you'd like to discuss..."
                 value={formData.description}
                 onChange={(e) => updateFormData({ description: e.target.value })}
                 rows={4}
@@ -166,6 +228,33 @@ function BookingContent() {
 }
 
 export default function BookingPage() {
+  const searchParams = useSearchParams()
+
+  // Parse query parameters from calendar page
+  const { initialData, initialStep } = useMemo(() => {
+    const dateParam = searchParams.get('date')
+    const timeParam = searchParams.get('time')
+    const typeParam = searchParams.get('type')
+
+    // If we have all params from calendar, pre-populate and skip to step 2
+    if (dateParam && timeParam && typeParam) {
+      const selectedDate = new Date(dateParam)
+      const consultationType = typeParam as ConsultationType
+
+      const data: Partial<BookingFormData> = {
+        selectedDate,
+        selectedTime: timeParam,
+        consultationType,
+        title: '',
+        description: '',
+      }
+
+      return { initialData: data, initialStep: 1 } // Start at step 1 with pre-filled data
+    }
+
+    return { initialData: undefined, initialStep: 1 }
+  }, [searchParams])
+
   return (
     <>
       <Header />
@@ -180,7 +269,7 @@ export default function BookingPage() {
             </p>
           </div>
 
-          <BookingFlowProvider>
+          <BookingFlowProvider initialData={initialData} initialStep={initialStep}>
             <BookingContent />
           </BookingFlowProvider>
         </div>

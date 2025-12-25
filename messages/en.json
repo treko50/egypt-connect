@@ -32,6 +32,7 @@
     "home": "Home",
     "calendar": "Calendar",
     "profile": "Profile",
+    "about": "About",
     "signIn": "Sign In",
     "signUp": "Sign Up"
   },
@@ -109,32 +110,26 @@
       "initial": {
         "name": "Initial Consultation",
         "duration": "60 minutes",
-        "price": "$299",
-        "description": "Comprehensive initial consultation to understand your legal needs"
-      },
-      "standard": {
-        "name": "Standard Consultation",
-        "duration": "90 minutes",
-        "price": "$449",
-        "description": "Extended session for complex legal matters"
+        "price": "$50",
+        "description": "For most regular cases - comprehensive legal consultation to understand your needs"
       },
       "premium": {
-        "name": "Premium Consultation",
-        "duration": "120 minutes",
-        "price": "$649",
-        "description": "Comprehensive consultation with extended support"
+        "name": "Premium Initial Consultation",
+        "duration": "90 minutes",
+        "price": "$70",
+        "description": "For complex cases requiring deeper analysis - ideal for matters with 3+ documents or multiple legal issues"
       },
       "followUp": {
         "name": "Follow-up Session",
         "duration": "30 minutes",
-        "price": "$149",
-        "description": "Quick check-in for existing clients"
+        "price": "$30",
+        "description": "When requested by the Judge or when you need more details regarding a previous consultation"
       },
       "documentReview": {
         "name": "Document Review",
-        "duration": "45 minutes",
-        "price": "$199",
-        "description": "Focused review of legal documents"
+        "duration": "15 minutes",
+        "price": "$20",
+        "description": "Submit new documents for the Judge to review and prepare - focused on document analysis with brief guidance on next steps"
       }
     },
     "help": {

@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useUser, UserButton } from "@clerk/nextjs"
+import { useUser } from "@clerk/nextjs"
 import { useTranslations } from '@/components/LanguageProvider'
 import { Button } from "@/components/ui/button"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
-import { Calendar, Home, User, Settings } from "lucide-react"
+import { ProfileDropdown } from "@/components/ProfileDropdown"
+import { Calendar, Home, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function Header() {
@@ -17,8 +18,7 @@ export function Header() {
   const navigation = [
     { name: t('home'), href: `/`, icon: Home },
     { name: t('calendar'), href: `/calendar`, icon: Calendar },
-    { name: t('profile'), href: `/profile`, icon: User },
-    { name: 'Settings', href: `/settings`, icon: Settings },
+    { name: t('about'), href: `/about`, icon: User },
   ]
 
   return (
@@ -60,13 +60,7 @@ export function Header() {
         <div className="flex items-center space-x-3">
           <LanguageSwitcher />
           {isSignedIn ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "h-10 w-10",
-                },
-              }}
-            />
+            <ProfileDropdown />
           ) : (
             <Button variant="ghost" size="sm" asChild>
               <Link href="/sign-in">Sign In</Link>

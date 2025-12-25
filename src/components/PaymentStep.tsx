@@ -18,11 +18,26 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
 // Pricing configuration (matches backend)
 const PRICING = {
-  initial: 500,
-  standard: 300,
-  followUp: 200,
-  premium: 750,
-  documentReview: 250,
+  initial: 50,
+  followUp: 30,
+  premium: 70,
+  documentReview: 20,
+} as const
+
+// Consultation type display names
+const CONSULTATION_TYPE_NAMES = {
+  initial: 'Initial Consultation',
+  followUp: 'Follow-up Session',
+  premium: 'Premium Initial Consultation',
+  documentReview: 'Document Review',
+} as const
+
+// Consultation durations
+const CONSULTATION_DURATIONS = {
+  initial: '60 minutes',
+  followUp: '30 minutes',
+  premium: '90 minutes',
+  documentReview: '15 minutes',
 } as const
 
 interface CheckoutFormProps {
@@ -243,12 +258,22 @@ export function PaymentStep() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Consultation Type:</span>
-                <span className="font-medium text-gray-900 capitalize">
-                  {formData.consultationType}
+                <span className="font-medium text-gray-900">
+                  {CONSULTATION_TYPE_NAMES[formData.consultationType as keyof typeof CONSULTATION_TYPE_NAMES]}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Title:</span>
+                <span className="text-gray-600">Duration:</span>
+                <span className="font-medium text-gray-900">
+                  {CONSULTATION_DURATIONS[formData.consultationType as keyof typeof CONSULTATION_DURATIONS]}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Price:</span>
+                <span className="font-medium text-gray-900">${amount.toFixed(2)} USD</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Case Title:</span>
                 <span className="font-medium text-gray-900">{formData.title}</span>
               </div>
               <div className="flex justify-between">

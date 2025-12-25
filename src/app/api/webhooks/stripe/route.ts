@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabaseAdmin } from '@/lib/supabase'
 import { headers } from 'next/headers'
+import { createWherebyMeeting } from '@/lib/whereby'
+import { sendConfirmationEmail } from '@/lib/email/send-appointment-emails'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-12-15.clover',
@@ -73,35 +75,94 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
 
   const metadata = paymentIntent.metadata
 
-  // Create the appointment in database now that payment is confirmed
-  const { data: appointment, error } = await (supabaseAdmin
-    .from('appointments') as any)
-    .insert({
-      user_id: metadata.user_id,
-      title: metadata.title,
-      description: metadata.description,
-      start_time: metadata.start_time,
-      end_time: metadata.end_time,
-      consultation_type: metadata.consultation_type,
-      status: 'pending', // Pending judge confirmation
-      payment_status: 'paid',
-      payment_intent_id: paymentIntent.id,
-      amount_paid: paymentIntent.amount / 100, // Convert from cents
-      currency: paymentIntent.currency,
-    })
-    .select()
-    .single()
+  try {
+    // Create Whereby meeting first
+    const meetingUrl = await createWherebyMeeting(
+      metadata.start_time,
+      metadata.end_time
+    )
 
-  if (error) {
-    console.error('Failed to create appointment:', error)
-    // TODO: Send alert - payment succeeded but appointment creation failed
-    return
+    // Create the appointment in database now that payment is confirmed
+    const { data: appointment, error } = await (supabaseAdmin
+      .from('appointments') as any)
+      .insert({
+        user_id: metadata.user_id,
+        title: metadata.title,
+        description: metadata.description,
+        start_time: metadata.start_time,
+        end_time: metadata.end_time,
+        consultation_type: metadata.consultation_type,
+        status: 'pending', // Pending judge confirmation
+        payment_status: 'paid',
+        payment_intent_id: paymentIntent.id,
+        amount_paid: paymentIntent.amount / 100, // Convert from cents
+        currency: paymentIntent.currency,
+        meeting_url: meetingUrl,
+        meeting_provider: 'whereby',
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Failed to create appointment:', error)
+      // TODO: Send alert - payment succeeded but appointment creation failed
+      return
+    }
+
+    console.log('Appointment created:', appointment.id)
+
+    // Fetch user and judge details for email
+    const { data: userData } = await supabaseAdmin
+      .from('users')
+      .select('first_name, last_name, email')
+      .eq('id', metadata.user_id)
+      .single()
+
+    const { data: judgeData } = await supabaseAdmin
+      .from('users')
+      .select('first_name, last_name')
+      .eq('role', 'judge')
+      .limit(1)
+      .single()
+
+    if (userData && judgeData) {
+      const user = userData as { first_name: string; last_name: string; email: string }
+      const judge = judgeData as { first_name: string; last_name: string }
+
+      // Format dates
+      const startDate = new Date(metadata.start_time)
+      const appointmentDate = startDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+      const appointmentTime = startDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      })
+
+      // Send confirmation email to client
+      await sendConfirmationEmail({
+        clientEmail: user.email,
+        clientName: `${user.first_name} ${user.last_name}`,
+        appointmentId: appointment.id,
+        appointmentTitle: metadata.title,
+        appointmentDate,
+        appointmentTime,
+        meetingUrl,
+        consultationType: metadata.consultation_type,
+        judgeName: `${judge.first_name} ${judge.last_name}`,
+      }).catch(emailError => {
+        console.error('Failed to send confirmation email:', emailError)
+        // Don't throw - appointment is created, email failure is non-critical
+      })
+    }
+  } catch (error) {
+    console.error('Error in handlePaymentSuccess:', error)
+    // Log but don't throw - payment already succeeded
   }
-
-  console.log('Appointment created:', appointment.id)
-
-  // TODO: Send confirmation email to client
-  // TODO: Send notification to judge about new appointment
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {

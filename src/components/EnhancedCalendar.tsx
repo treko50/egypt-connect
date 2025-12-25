@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -44,10 +44,23 @@ export function EnhancedCalendar({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
   const [userTimezone, setUserTimezone] = useState(timezone)
+  const timeSlotsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setUserTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
   }, [])
+
+  // Auto-scroll to time slots when date is selected
+  useEffect(() => {
+    if (selectedDate && timeSlotsRef.current) {
+      setTimeout(() => {
+        timeSlotsRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 100)
+    }
+  }, [selectedDate])
 
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
@@ -409,7 +422,7 @@ export function EnhancedCalendar({
 
       {/* Time Slots */}
       {selectedDate && (
-        <Card className="shadow-lg border-gray-200">
+        <Card ref={timeSlotsRef} className="shadow-lg border-gray-200 scroll-mt-20">
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
               <Clock className="h-5 w-5 text-primary-600" />

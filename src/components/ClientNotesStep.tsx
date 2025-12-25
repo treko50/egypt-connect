@@ -4,12 +4,45 @@ import { useBookingFlow } from './BookingFlowProvider'
 import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Textarea } from './ui/textarea'
+import { Calendar, Clock, FileCheck } from 'lucide-react'
 
 export function ClientNotesStep() {
   const { formData, updateFormData, setCurrentStep } = useBookingFlow()
 
   return (
     <div className="space-y-6">
+      {/* Appointment Summary Card */}
+      {formData.selectedDate && formData.selectedTime && (
+        <Card className="border-primary-200 bg-gradient-to-br from-primary-50 to-white">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileCheck className="h-5 w-5 text-primary-600" />
+              Appointment Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-start gap-3">
+              <Calendar className="h-5 w-5 text-primary-600 mt-0.5" />
+              <div>
+                <p className="font-medium text-gray-900">
+                  {formData.selectedDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+                <p className="text-sm text-gray-600">{formData.title}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock className="h-5 w-5 text-primary-600" />
+              <p className="font-medium text-gray-900">{formData.selectedTime}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Add Your Questions & Context</CardTitle>
@@ -55,10 +88,10 @@ export function ClientNotesStep() {
           variant="outline"
           onClick={() => setCurrentStep(2)}
         >
-          Back to Documents
+          ← Back to Documents
         </Button>
         <Button onClick={() => setCurrentStep(4)}>
-          Continue to Payment
+          Continue to Payment →
         </Button>
       </div>
     </div>

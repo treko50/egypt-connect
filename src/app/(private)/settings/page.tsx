@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useUser, UserButton } from "@clerk/nextjs"
+import { useSearchParams } from "next/navigation"
+import { useUser } from "@clerk/nextjs"
+import Image from "next/image"
 import { useTranslations } from "@/components/LanguageProvider"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
@@ -26,9 +28,18 @@ import {
 export default function SettingsPage() {
   const { user, isLoaded } = useUser()
   const { t } = useTranslations('settings')
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<'profile' | 'account' | 'notifications' | 'billing'>('profile')
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+
+  // Set active tab from query parameter
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && ['profile', 'account', 'notifications', 'billing'].includes(tabParam)) {
+      setActiveTab(tabParam as 'profile' | 'account' | 'notifications' | 'billing')
+    }
+  }, [searchParams])
 
   // Profile state - will be loaded from Supabase
   const [profileData, setProfileData] = useState({
@@ -180,22 +191,13 @@ export default function SettingsPage() {
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-                {t('title')}
-              </h1>
-              <p className="text-gray-600 mt-2 text-lg">
-                {t('subtitle')}
-              </p>
-            </div>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "h-12 w-12",
-                },
-              }}
-            />
+          <div className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+              {t('title')}
+            </h1>
+            <p className="text-gray-600 mt-2 text-lg">
+              {t('subtitle')}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -260,9 +262,11 @@ export default function SettingsPage() {
                     {/* Profile Picture */}
                     <div className="flex items-center gap-6">
                       {user?.imageUrl ? (
-                        <img
+                        <Image
                           src={user.imageUrl}
                           alt={`${profileData.firstName} ${profileData.lastName}`}
+                          width={96}
+                          height={96}
                           className="w-24 h-24 rounded-full object-cover"
                         />
                       ) : (

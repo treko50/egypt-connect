@@ -4,91 +4,101 @@ import { useBookingFlow } from './BookingFlowProvider'
 import { Check } from 'lucide-react'
 
 const steps = [
-  { number: 1, name: 'Date & Type', description: 'Select date, time, and consultation type' },
-  { number: 2, name: 'Documents', description: 'Upload relevant documents (optional)' },
-  { number: 3, name: 'Notes', description: 'Add questions or context for the judge' },
-  { number: 4, name: 'Payment', description: 'Complete your booking' },
+  { number: 1, name: 'Date & Type', shortName: 'Date' },
+  { number: 2, name: 'Documents', shortName: 'Docs' },
+  { number: 3, name: 'Notes', shortName: 'Notes' },
+  { number: 4, name: 'Payment', shortName: 'Pay' },
 ]
 
 export function BookingFlowStepper() {
   const { currentStep, setCurrentStep, canProceedToStep } = useBookingFlow()
 
   return (
-    <div className="w-full py-6">
-      <nav aria-label="Progress">
-        <ol className="flex items-center justify-between">
-          {steps.map((step, stepIdx) => {
+    <div className="w-full mb-8">
+      {/* Current Step Indicator */}
+      <div className="mb-6 text-center">
+        <div className="text-sm font-medium text-gray-500 mb-1">
+          Step {currentStep} of {steps.length}
+        </div>
+        <div className="text-2xl font-bold text-gray-900">
+          {steps[currentStep - 1].name}
+        </div>
+      </div>
+
+      {/* Step Indicators with Progress Bar */}
+      <nav aria-label="Progress" className="relative">
+        <div className="flex items-center justify-between relative">
+          {/* Background Progress Bar */}
+          <div className="absolute left-0 right-0 top-5 flex items-center px-5">
+            <div className="flex-1 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-full bg-gradient-to-r from-primary-600 to-primary-700 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {steps.map((step) => {
             const isCompleted = currentStep > step.number
             const isCurrent = currentStep === step.number
             const canAccess = canProceedToStep(step.number)
 
             return (
-              <li
-                key={step.name}
-                className={`relative flex-1 ${stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : ''}`}
-              >
-                {/* Connector line */}
-                {stepIdx !== steps.length - 1 && (
-                  <div
-                    className="absolute top-4 left-0 -ml-px mt-0.5 h-0.5 w-full"
-                    aria-hidden="true"
-                  >
-                    <div
-                      className={`h-full ${
-                        isCompleted ? 'bg-primary-600' : 'bg-gray-300'
-                      }`}
-                    />
-                  </div>
-                )}
-
+              <div key={step.name} className="flex flex-col items-center relative z-10">
                 <button
                   onClick={() => canAccess && setCurrentStep(step.number)}
                   disabled={!canAccess}
-                  className={`group relative flex flex-col items-center ${
-                    canAccess ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                  className={`relative transition-all duration-300 ${
+                    canAccess ? 'cursor-pointer' : 'cursor-not-allowed'
                   }`}
                 >
-                  {/* Step circle */}
-                  <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
-                      isCompleted
-                        ? 'bg-primary-600 group-hover:bg-primary-700'
-                        : isCurrent
-                        ? 'border-2 border-primary-600 bg-white'
-                        : 'border-2 border-gray-300 bg-white group-hover:border-gray-400'
-                    }`}
+                  {/* Step Circle */}
+                  <div
+                    className={`
+                      flex items-center justify-center rounded-full transition-all duration-300 border-4 border-white
+                      ${
+                        isCurrent
+                          ? 'w-12 h-12 bg-primary-600 shadow-lg shadow-primary-600/50 scale-110'
+                          : isCompleted
+                          ? 'w-10 h-10 bg-primary-600'
+                          : 'w-10 h-10 bg-gray-200'
+                      }
+                      ${canAccess && !isCurrent ? 'hover:scale-105 hover:shadow-md' : ''}
+                    `}
                   >
                     {isCompleted ? (
-                      <Check className="h-5 w-5 text-white" />
+                      <Check className="h-5 w-5 text-white" strokeWidth={3} />
                     ) : (
                       <span
-                        className={`text-sm font-medium ${
-                          isCurrent ? 'text-primary-600' : 'text-gray-500'
+                        className={`text-sm font-bold ${
+                          isCurrent ? 'text-white' : 'text-gray-500'
                         }`}
                       >
                         {step.number}
                       </span>
                     )}
-                  </span>
+                  </div>
 
-                  {/* Step name and description */}
-                  <span className="mt-2 flex flex-col items-center text-center">
-                    <span
-                      className={`text-sm font-medium ${
-                        isCurrent ? 'text-primary-600' : 'text-gray-900'
+                  {/* Step Label */}
+                  <div className="mt-3 text-center">
+                    <div
+                      className={`text-xs font-medium transition-colors whitespace-nowrap ${
+                        isCurrent
+                          ? 'text-primary-600 font-semibold'
+                          : isCompleted
+                          ? 'text-gray-700'
+                          : 'text-gray-400'
                       }`}
                     >
-                      {step.name}
-                    </span>
-                    <span className="hidden sm:block text-xs text-gray-500 mt-1 max-w-[120px]">
-                      {step.description}
-                    </span>
-                  </span>
+                      <span className="hidden sm:inline">{step.name}</span>
+                      <span className="sm:hidden">{step.shortName}</span>
+                    </div>
+                  </div>
                 </button>
-              </li>
+              </div>
             )
           })}
-        </ol>
+        </div>
       </nav>
     </div>
   )

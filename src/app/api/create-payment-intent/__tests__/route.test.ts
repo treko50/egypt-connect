@@ -17,12 +17,13 @@ const mockSupabaseAdmin = supabaseAdmin as jest.Mocked<typeof supabaseAdmin>
 const mockStripe = Stripe as jest.MockedClass<typeof Stripe>
 
 // Stripe test card numbers from official documentation
-const STRIPE_TEST_CARDS = {
-  SUCCESS: '4242424242424242',
-  REQUIRES_AUTH: '4000002500003155',
-  DECLINED: '4000000000000002',
-  INSUFFICIENT_FUNDS: '4000000000009995',
-}
+// These can be used for testing payment flows in integration tests
+// const STRIPE_TEST_CARDS = {
+//   SUCCESS: '4242424242424242',
+//   REQUIRES_AUTH: '4000002500003155',
+//   DECLINED: '4000000000000002',
+//   INSUFFICIENT_FUNDS: '4000000000009995',
+// }
 
 describe('POST /api/create-payment-intent', () => {
   let mockPaymentIntentsCreate: jest.Mock

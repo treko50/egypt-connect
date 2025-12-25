@@ -18,7 +18,7 @@ interface CompletedAppointment {
   }
 }
 
-export function FollowUpSelector() {
+export function DocumentReviewSelector() {
   const { formData, updateFormData } = useBookingFlow()
   const [completedAppointments, setCompletedAppointments] = useState<CompletedAppointment[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -38,12 +38,12 @@ export function FollowUpSelector() {
       }
     }
 
-    if (formData.consultationType === 'followUp') {
+    if (formData.consultationType === 'documentReview') {
       fetchCompletedAppointments()
     }
   }, [formData.consultationType])
 
-  if (formData.consultationType !== 'followUp') {
+  if (formData.consultationType !== 'documentReview') {
     return null
   }
 
@@ -65,7 +65,7 @@ export function FollowUpSelector() {
         <CardHeader>
           <CardTitle className="text-yellow-900">No Completed Appointments</CardTitle>
           <CardDescription className="text-yellow-800">
-            Follow-up appointments can only be booked after completing an initial consultation.
+            Document review can only be booked after completing an initial consultation.
             Please book an initial consultation first.
           </CardDescription>
         </CardHeader>
@@ -84,10 +84,10 @@ export function FollowUpSelector() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Select Previous Appointment</CardTitle>
+        <CardTitle>Select Related Appointment</CardTitle>
         <CardDescription>
-          Choose which appointment you&apos;d like to follow up on. The judge will have access to all
-          documents and notes from the previous session.
+          Choose which appointment these documents relate to. The judge will review your documents
+          and provide brief guidance on next steps.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">

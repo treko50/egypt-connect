@@ -40,7 +40,7 @@ export async function GET() {
         title,
         start_time,
         consultation_type,
-        assigned_judge:users!appointments_assigned_judge_id_fkey (
+        assigned_judge:users!assigned_judge_id (
           first_name,
           last_name,
           judge_title
