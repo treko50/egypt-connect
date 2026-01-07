@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(ls:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout 15 cmd:*)",
+      "Bash(ping:*)",
+      "Bash(curl:*)",
+      "Bash(timeout 20 npm run dev)",
+      "Bash(dir:*)",
+      "Bash(npx tsc:*)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(git show:*)",
+      "Bash(timeout:*)",
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "Bash(Select-String -Pattern \"settings.*page.tsx\" -Context 0,0)",
+      "Bash(node -e:*)",
+      "Bash(exit 0)",
+      "Bash(if exist \".next\" rmdir /s /q \".next\")",
+      "mcp__ide__getDiagnostics",
+      "Bash(grep:*)",
+      "Bash(stripe --version:*)",
+      "Bash(npm install)",
+      "Bash(npm test)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(node scripts/diagnose-appointments.js:*)",
+      "Bash(timeout /t 8 /nobreak)"
+    ]
+  }
+}

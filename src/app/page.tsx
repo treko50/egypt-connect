@@ -1,45 +1,26 @@
+'use client'
+
 import Link from "next/link"
+import { useTranslations } from '@/components/LanguageProvider'
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Calendar, Clock, Users, Shield, Zap, Globe } from "lucide-react"
-import { STRINGS } from "@/hardcoded-strings"
 
 const features = [
-  { 
-    icon: Calendar, 
-    title: 'Smart Scheduling',
-    description: 'Effortlessly manage appointments and availability with our intelligent scheduling system.'
-  },
-  { 
-    icon: Clock, 
-    title: 'Time Zone Support',
-    description: 'Automatically handle multiple time zones for global collaboration.'
-  },
-  { 
-    icon: Users, 
-    title: 'Team Collaboration',
-    description: 'Coordinate schedules across your entire team with ease.'
-  },
-  { 
-    icon: Shield, 
-    title: 'Secure & Private',
-    description: 'Your data is protected with enterprise-grade security.'
-  },
-  { 
-    icon: Zap, 
-    title: 'Lightning Fast',
-    description: 'Built for speed and optimized for the best user experience.'
-  },
-  { 
-    icon: Globe, 
-    title: 'Global Access',
-    description: 'Access your calendar anywhere, anytime, from any device.'
-  },
+  { icon: Calendar, key: 'scheduling' },
+  { icon: Clock, key: 'timezone' },
+  { icon: Users, key: 'team' },
+  { icon: Shield, key: 'secure' },
+  { icon: Zap, key: 'fast' },
+  { icon: Globe, key: 'global' },
 ]
 
 export default function Home() {
+  const { t: tHome } = useTranslations('home')
+  const { t: tFeatures } = useTranslations('home.features')
+
   return (
     <>
       <Header />
@@ -51,27 +32,27 @@ export default function Home() {
             <div className="mx-auto max-w-4xl text-center">
               <div className="mb-6 inline-flex items-center rounded-full bg-primary-100 px-4 py-2 text-sm font-medium text-primary-700">
                 <Zap className="mr-2 h-4 w-4" />
-                Professional Scheduling
+                {tHome('badge')}
               </div>
-              
+
               <h1 className="mb-6 text-5xl md:text-7xl font-bold tracking-tight text-gray-900 animate-fade-in">
-                {STRINGS.homePage.title}
+                {tHome('title')}
               </h1>
-              
+
               <p className="mb-8 text-xl text-gray-600 max-w-2xl mx-auto animate-slide-up">
-                {STRINGS.homePage.intro}
-              </p>
-              
-              <p className="mb-10 text-lg text-gray-500 max-w-xl mx-auto animate-slide-up">
-                {STRINGS.homePage.description}
+                {tHome('intro')}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
+              <p className="mb-10 text-lg text-gray-500 max-w-xl mx-auto animate-slide-up">
+                {tHome('description')}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up relative z-10">
                 <Button asChild size="lg" className="text-lg px-8 py-6 rounded-xl">
-                  <Link href="/calendar">{STRINGS.homePage.scheduleButton}</Link>
+                  <Link href="/calendar">{tHome('scheduleButton')}</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 rounded-xl">
-                  <Link href="#features">Learn More</Link>
+                  <Link href="/about">{tHome('learnMore')}</Link>
                 </Button>
               </div>
             </div>
@@ -88,10 +69,10 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Powerful Features
+                {tFeatures('title')}
               </h2>
               <p className="text-xl text-gray-600">
-                Everything you need to manage your schedule efficiently
+                {tFeatures('subtitle')}
               </p>
             </div>
 
@@ -99,8 +80,8 @@ export default function Home() {
               {features.map((feature) => {
                 const Icon = feature.icon
                 return (
-                  <Card 
-                    key={feature.title}
+                  <Card
+                    key={feature.key}
                     className="hover:shadow-xl transition-shadow duration-300 border-gray-100"
                   >
                     <CardHeader>
@@ -108,10 +89,10 @@ export default function Home() {
                         <Icon className="h-6 w-6 text-white" />
                       </div>
                       <CardTitle className="text-xl mb-2">
-                        {feature.title}
+                        {tFeatures(`${feature.key}.title`)}
                       </CardTitle>
                       <CardDescription className="text-base">
-                        {feature.description}
+                        {tFeatures(`${feature.key}.description`)}
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -125,13 +106,13 @@ export default function Home() {
         <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-800 text-white">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Get Started?
+              {tHome('cta.title')}
             </h2>
             <p className="text-xl mb-10 text-primary-100 max-w-2xl mx-auto">
-              Book your consultation today and experience professional scheduling
+              {tHome('cta.subtitle')}
             </p>
             <Button asChild size="lg" variant="secondary" className="text-lg px-8 py-6 rounded-xl">
-              <Link href="/calendar">Schedule Now</Link>
+              <Link href="/calendar">{tHome('cta.button')}</Link>
             </Button>
           </div>
         </section>
@@ -140,4 +121,3 @@ export default function Home() {
     </>
   )
 }
-

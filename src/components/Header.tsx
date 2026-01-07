@@ -2,19 +2,23 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { useUser } from "@clerk/nextjs"
+import { useTranslations } from '@/components/LanguageProvider'
 import { Button } from "@/components/ui/button"
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { ProfileDropdown } from "@/components/ProfileDropdown"
 import { Calendar, Home, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function Header() {
   const pathname = usePathname()
+  const { t } = useTranslations('navigation')
   const { isSignedIn } = useUser()
 
   const navigation = [
-    { name: 'Home', href: `/`, icon: Home },
-    { name: 'Calendar', href: `/calendar`, icon: Calendar },
-    { name: 'Profile', href: `/profile`, icon: User },
+    { name: t('home'), href: `/`, icon: Home },
+    { name: t('calendar'), href: `/calendar`, icon: Calendar },
+    { name: t('about'), href: `/about`, icon: User },
   ]
 
   return (
@@ -52,25 +56,15 @@ export function Header() {
           })}
         </nav>
 
-        {/* Auth */}
+        {/* Language & Auth */}
         <div className="flex items-center space-x-3">
+          <LanguageSwitcher />
           {isSignedIn ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "h-9 w-9",
-                },
-              }}
-            />
+            <ProfileDropdown />
           ) : (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <SignInButton />
-              </Button>
-              <Button size="sm" asChild>
-                <SignUpButton />
-              </Button>
-            </>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
           )}
         </div>
       </div>
